@@ -1,12 +1,14 @@
 import React, { FunctionComponent, CSSProperties, ReactNode } from 'react'
 import classNames from 'classnames'
-import { Icon } from '@/packages/icon/icon'
+import Icon from '@/packages/icon/index.taro'
 import bem from '@/utils/bem'
+
+import { BasicComponent, ComponentDefaults } from '@/utils/typings'
 
 export type ProgressSize = 'small' | 'base' | 'large'
 export type TextType = 'icon' | 'text'
 
-export interface ProgressProps {
+export interface ProgressProps extends BasicComponent {
   className: string
   style: CSSProperties
   isShowPercentage: boolean
@@ -30,6 +32,7 @@ export interface ProgressProps {
 }
 
 const defaultProps = {
+  ...ComponentDefaults,
   className: '',
   style: {},
   isShowPercentage: true,
@@ -75,8 +78,13 @@ export const Progress: FunctionComponent<
     iconSize,
     rounded,
     children,
+    iconClassPrefix,
+    iconFontClassName,
     ...rest
-  } = { ...defaultProps, ...props }
+  } = {
+    ...defaultProps,
+    ...props,
+  }
 
   const b = bem('progress')
 
@@ -164,14 +172,20 @@ export const Progress: FunctionComponent<
           {textType === 'text' && (
             <span
               className={classesTextInner}
-              style={{ color: textColor || '#333' }}
+              style={{ color: textColor || '$title-color' }}
             >
               {percentage}
               {isShowPercentage ? '%' : ''}
             </span>
           )}
           {textType === 'icon' && (
-            <Icon size={iconSize} name={iconName} color={iconColor} />
+            <Icon
+              classPrefix={iconClassPrefix}
+              fontClassName={iconFontClassName}
+              size={iconSize}
+              name={iconName}
+              color={iconColor}
+            />
           )}
         </div>
       )}

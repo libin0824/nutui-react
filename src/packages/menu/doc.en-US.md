@@ -7,7 +7,9 @@ The menu list that pops down downwards.
 ### Install
 
 ``` javascript
+// react
 import { Menu, MenuItem } from '@nutui/nutui-react';
+
 ```
 
 ### Basic Usage
@@ -15,7 +17,7 @@ import { Menu, MenuItem } from '@nutui/nutui-react';
 :::demo
 
 ```tsx
-import React from 'react';
+import React, {useState } from 'react'
 import { Menu, MenuItem } from '@nutui/nutui-react';
 
 const App = () => {
@@ -35,7 +37,7 @@ const App = () => {
         <h2>Basic Usage</h2>
         <Menu>
           <MenuItem options={options} value={0} />
-          <MenuItem options={options1} value={'a'} />
+          <MenuItem options={options1} value="a" />
         </Menu>
       </div>
     </>
@@ -54,8 +56,8 @@ Popup can be closed with toggle method in menu instance.
 :::demo
 
 ```tsx
-import React from 'react';
-import { Menu, MenuItem } from '@nutui/nutui-react';
+import React, { useRef, useState } from 'react'
+import { Menu, MenuItem, Button } from '@nutui/nutui-react';
 
 const App = () => {
   const [options] = useState([
@@ -63,14 +65,16 @@ const App = () => {
     { text: 'New Products', value: 1 },
     { text: 'Activity Products', value: 2 }
   ])
+  const itemRef = useRef(null)
+  
   return (
     <>
       <div className="demo full">
         <Menu>
           <MenuItem options={options} value={0} />
-          <MenuItem title="筛选">
+          <MenuItem title="筛选" ref={itemRef}>
             <div>Custom content</div>
-            <Button>Confirm</Button>
+            <Button onClick={() => itemRef.current.toggle(false)}>Confirm</Button>
           </MenuItem>
         </Menu>
       </div>
@@ -88,7 +92,7 @@ export default App
 :::demo
 
 ```tsx
-import React from 'react';
+import React, { useState } from 'react'
 import { Menu, MenuItem } from '@nutui/nutui-react';
 
 const App = () => {
@@ -134,7 +138,7 @@ export default App
 :::demo
 
 ```tsx
-import React from 'react';
+import React, { useState } from 'react'
 import { Menu, MenuItem } from '@nutui/nutui-react';
 
 const App = () => {
@@ -170,7 +174,7 @@ export default App
 :::demo
 
 ```tsx
-import React from 'react';
+import React, { useState } from 'react'
 import { Menu, MenuItem } from '@nutui/nutui-react';
 
 const App = () => {
@@ -206,7 +210,7 @@ export default App
 :::demo
 
 ```tsx
-import React from 'react';
+import React, { useState } from 'react'
 import { Menu, MenuItem } from '@nutui/nutui-react';
 
 const App = () => {
@@ -242,7 +246,7 @@ export default App
 :::demo
 
 ```tsx
-import React from 'react';
+import React, { useState } from 'react'
 import { Menu, MenuItem } from '@nutui/nutui-react';
 
 const App = () => {
@@ -305,3 +309,37 @@ export default App
 | Event      | Description                 | Arguments     |
 |----------|----------------------|--------------|
 | onChange | Emitted select option changed | Selected value |
+
+### MenuItem API
+
+| Event | Description                 | Arguments     |
+|-----|----------------------|--------------|
+| toggle   | Toggle menu display status, true to show，false to hide, no param is negated | show?: boolean |
+
+## Theming
+
+### CSS Variables
+
+The component provides the following CSS variables, which can be used to customize styles. Please refer to [ConfigProvider component](#/en-US/component/configprovider).
+
+| Name | Default Value |
+| --- | --- |
+| --nutui-menu-bar-line-height | ` 48px` |
+| --nutui-menu-item-font-size | ` $font-size-2` |
+| --nutui-menu-item-text-color | ` $title-color` |
+| --nutui-menu-item-active-text-color | `  $primary-color` |
+| --nutui-menu-bar-border-bottom-color | `  #eaf0fb` |
+| --nutui-menu-bar-opened-z-index | ` 2001` |
+| --nutui-menu-item-disabled-color | `  #969799` |
+| --nutui-menu-title-text-padding-left | `  8px` |
+| --nutui-menu-title-text-padding-right | `  8px` |
+| --nutui-menu-item-content-padding | `  12px 24px` |
+| --nutui-menu-item-content-max-height | `  214px` |
+| --nutui-menu-item-option-padding-top | `  12px` |
+| --nutui-menu-item-option-padding-bottom | `  12px` |
+| --nutui-menu-item-option-i-margin-right | `  6px` |
+| --nutui-menu-bar-box-shadow | `  0 2px 12px rgba(89, 89, 89, 0.12)` |
+| --nutui-menu-scroll-fixed-top | ` 0` |
+| --nutui-menu-scroll-fixed-z-index | `  $mask-z-index` |
+| --nutui-menu-active-item-font-weight | `  500` |
+| --nutui-menu-item-content-bg-color | `  $gray6` |

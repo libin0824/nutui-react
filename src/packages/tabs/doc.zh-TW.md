@@ -7,7 +7,9 @@
 ### 安装
 
 ```ts
+// react
 import { Tabs, TabPane } from '@nutui/nutui-react';
+
 ```
 
 ## 代码演示
@@ -98,7 +100,7 @@ export default App;
 :::demo
 
 ```tsx
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { Tabs, TabPane } from '@nutui/nutui-react';
 
 const App = () => {
@@ -167,7 +169,7 @@ const App = () => {
   const list5 = Array.from(new Array(2).keys());
   return (
     <>
-      <Tabs value={tab5value} onChange={({ paneKey }) => {
+      <Tabs style={{ height: '300px' }} value={tab5value} onChange={({ paneKey }) => {
         setTab5value(paneKey)
       }} titleScroll direction="vertical">
         {list5.map(item => <TabPane key={item}
@@ -194,7 +196,7 @@ const App = () => {
   const list5 = Array.from(new Array(2).keys());
   return (
     <>
-      <Tabs value={tab6value} onChange={({ paneKey }) => {
+      <Tabs style={{ height: '300px' }} value={tab6value} onChange={({ paneKey }) => {
         setTab6value(paneKey)
       }} type="smile" titleScroll direction="vertical">
         {list5.map(item => <TabPane key={item}
@@ -321,7 +323,7 @@ export default App;
 | ellipsis      | 是否省略过长的标题文字                        | boolean       | true       |
 | animatedTime | 切换动画时长,单位 ms 0 代表无动画              | number,string | 300        |
 | titleGutter  | 标签间隙                                      | number,string | 0          |
-| titleNode    | 自定义导航区域                                 | () => JSX.Element[] | 0          |
+| titleNode    | 自定义导航区域                                 | `() => JSX.Element[]` | 0          |
 | size         | 标签栏字体尺寸大小 可选值 large normal small | string        | normal     |
 
 ## Tabs Children
@@ -344,3 +346,29 @@ export default App;
 |--------|--------------------------|--------------------------|
 | click  | 点击标签时触发           | {title,paneKey,disabled} |
 | change | 当前激活的标签改变时触发 | {title,paneKey,disabled} |
+
+
+## 主題定制
+
+### 樣式變量
+
+組件提供了下列 CSS 變量，可用於自定義樣式，使用方法請參考 [ConfigProvider 組件](#/zh-CN/component/configprovider)。
+
+| 名稱 | 默認值 |
+| --- | --- |
+| --nutui-tabs-tab-smile-color | `  $primary-color` |
+| --nutui-tabs-titles-border-radius | ` 0` |
+| --nutui-tabs-titles-item-large-font-size | `  $font-size-3` |
+| --nutui-tabs-titles-item-font-size | `  $font-size-2` |
+| --nutui-tabs-titles-item-small-font-size | `  $font-size-1` |
+| --nutui-tabs-titles-item-color | `  $title-color` |
+| --nutui-tabs-titles-item-active-color | `  $title-color` |
+| --nutui-tabs-titles-background-color | `  $background-color2` |
+| --nutui-tabs-horizontal-titles-height | `  46px` |
+| --nutui-tabs-horizontal-titles-item-min-width | `  50px` |
+| --nutui-tabs-horizontal-titles-item-active-line-width | `  40px` |
+| --nutui-tabs-vertical-titles-item-height | `  40px` |
+| --nutui-tabs-vertical-titles-item-active-line-height | `  14px` |
+| --nutui-tabs-vertical-titles-width | `  100px` |
+| --nutui-tabs-titles-item-line-border-radius | `  0` |
+| --nutui-tabs-titles-item-line-opacity | `  1` |

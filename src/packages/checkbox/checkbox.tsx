@@ -4,7 +4,14 @@ import CheckboxGroup from '@/packages/checkboxgroup'
 
 import bem from '@/utils/bem'
 
-export interface CheckboxProps {
+import { BasicComponent, ComponentDefaults } from '@/utils/typings'
+
+interface InheritParentProps {
+  getParentVals?: () => string[] | undefined
+  max?: number | undefined
+}
+
+export interface CheckboxProps extends BasicComponent {
   checked: boolean
   disabled: boolean
   textPosition: 'left' | 'right'
@@ -20,6 +27,7 @@ export interface CheckboxProps {
 }
 
 const defaultProps = {
+  ...ComponentDefaults,
   checked: false,
   disabled: false,
   textPosition: 'right',
@@ -33,9 +41,13 @@ const defaultProps = {
 } as CheckboxProps
 export const Checkbox: FunctionComponent<
   Partial<CheckboxProps> &
-    Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'>
+    Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> &
+    InheritParentProps
 > & { Group: typeof CheckboxGroup } = (props) => {
-  const { children } = { ...defaultProps, ...props }
+  const { children } = {
+    ...defaultProps,
+    ...props,
+  }
   const b = bem('checkbox')
   const {
     iconName,
@@ -82,11 +94,11 @@ export const Checkbox: FunctionComponent<
   const renderIcon = () => {
     return (
       <Icon
+        classPrefix={iconClassPrefix}
+        fontClassName={iconFontClassName}
         name={getIconName()}
         size={iconSize}
         className={color()}
-        classPrefix={iconClassPrefix}
-        fontClassName={iconFontClassName}
       />
     )
   }

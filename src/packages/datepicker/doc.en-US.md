@@ -5,9 +5,11 @@
 Used to select time, support date and time dimensions, usually used with the Popup component.
     
 ### Install
-    
-```javascript
+
+```ts
+// react
 import { DatePicker } from '@nutui/nutui';
+
 ```
     
 ### Choose Date
@@ -15,7 +17,7 @@ import { DatePicker } from '@nutui/nutui';
 :::demo
 ```tsx
 import  React, { useState  } from "react";
-import { DatePicker,Cell,Popup,Picker } from '@nutui/nutui-react';
+import { DatePicker,Cell } from '@nutui/nutui-react';
 
 const App = () => {
   const [show1, setShow1] = useState(false)
@@ -45,7 +47,7 @@ export default App;
 :::demo
 ```tsx
 import  React, { useState  } from "react";
-import { DatePicker,Cell,Popup,Picker } from '@nutui/nutui-react';
+import { DatePicker,Cell } from '@nutui/nutui-react';
 
 const App = () => {
   const [show2, setShow2] = useState(false)
@@ -77,7 +79,7 @@ export default App;
 :::demo
 ```tsx
 import  React, { useState  } from "react";
-import { DatePicker,Cell,Popup,Picker } from '@nutui/nutui-react';
+import { DatePicker,Cell } from '@nutui/nutui-react';
 
 const App = () => {
   const minDate = new Date(2020, 0, 1)
@@ -87,7 +89,7 @@ const App = () => {
   const confirm3 = (values:(string|number)[],options:PickerOption[])=>{
     const date = values.slice(0, 3).join('-');
     const time = values.slice(3).join(':');
-    setDesc3(date + ' ' + time)
+    setDesc3(`${date  } ${  time}`)
   }
   return ( 
     <>   
@@ -113,7 +115,7 @@ export default App;
 :::demo
 ```tsx
 import  React, { useState  } from "react";
-import { DatePicker,Cell,Popup,Picker  } from '@nutui/nutui-react';
+import { DatePicker,Cell  } from '@nutui/nutui-react';
 
 const App = () => {
   const minDate = new Date(2020, 0, 1)
@@ -148,7 +150,7 @@ export default App;
 :::demo
 ```tsx
 import  React, { useState  } from "react";
-import { DatePicker,Cell,Popup,Picker } from '@nutui/nutui-react';
+import { DatePicker,Cell } from '@nutui/nutui-react';
 
 const App = () => {
   const minDate = new Date(2020, 0, 1)
@@ -213,7 +215,7 @@ export default App;
 :::demo
 ```tsx
 import  React, { useState  } from "react";
-import { DatePicker,Cell,Popup,Picker } from '@nutui/nutui-react';
+import { DatePicker,Cell } from '@nutui/nutui-react';
 
 const App = () => {
   const minDate = new Date(2020, 0, 1)
@@ -250,7 +252,7 @@ export default App;
 :::demo
 ```tsx
 import  React, { useState  } from "react";
-import { DatePicker,Cell,Popup,Picker } from '@nutui/nutui-react';
+import { DatePicker,Cell } from '@nutui/nutui-react';
 
 const App = () => {
   const minDate = new Date(2020, 0, 1)
@@ -262,7 +264,7 @@ const App = () => {
     setDesc7(options.map((option) => option.text).join(' '))
   }
   const filter = (type: string, options:PickerOption[]) => {
-    if (type == 'hour') {
+    if (type === 'hour') {
       return options.filter((option) => Number(option.value) % 6 === 0);
     }
     return options;

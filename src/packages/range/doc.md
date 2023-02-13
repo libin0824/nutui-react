@@ -7,7 +7,9 @@
 ### 安装
 
 ```javascript
+// react
 import { Range } from '@nutui/nutui-react';
+
 ```
 
 ## 代码演示
@@ -18,7 +20,7 @@ import { Range } from '@nutui/nutui-react';
 
 ```tsx
 import  React from "react";
-import { Range,Cell } from '@nutui/nutui-react';
+import { Range, Cell } from '@nutui/nutui-react';
 
 const App = () => {
     const cellStyle = {
@@ -32,9 +34,48 @@ const App = () => {
     </>
     )
 };
+
 export default App;
 ```
 :::
+
+### 自定义描述
+
+:::demo
+
+```tsx
+import  React, {useState} from "react";
+import { Range,Cell,Toast } from '@nutui/nutui-react';
+
+const App = () => {
+    const [value, SetValue] = useState(40)
+    const change = (value: number, name?: string) => {
+        Toast.text(`当前值：${value}`)
+        SetValue(value)
+    }
+    const cellStyle = {
+        padding: '40px 18px',
+    }
+    return (
+    <>
+        <Cell style={cellStyle}>
+           <Range
+            modelValue={value}
+            minDesc="0%"
+            maxDesc="100%"
+            curValueDesc={`${value}%`}
+            onChange={(value) => {
+              change(value)
+            }}
+          />
+        </Cell>
+    </>
+    )
+};
+export default App;
+```
+:::
+
 ### 双滑块
 
 :::demo
@@ -58,7 +99,7 @@ const App = () => {
         <Range
             range
             modelValue={value0}
-            change={(value) => {
+            onChange={(value) => {
                 change(value)
             }}
         />
@@ -92,7 +133,7 @@ const App = () => {
             modelValue={0}
             max={10}
             min={-10}
-            change={(value) => {
+            onChange={(value) => {
                 change(value)
             }}
             />
@@ -127,7 +168,7 @@ const App = () => {
         <Range
             modelValue={value1}
             step={5}
-            change={(value: any) => {
+            onChange={(value: any) => {
                 change(value, 'value1')
             }}
             />
@@ -145,7 +186,7 @@ export default App;
 :::demo
 
 ```tsx
-import  React, {useState} from "react";
+import  React from "react";
 import { Range,Cell,Toast } from '@nutui/nutui-react';
 
 const App = () => {
@@ -161,7 +202,7 @@ const App = () => {
         <Range
             modelValue={30}
             hiddenRange
-            change={(value: any) => {
+            onChange={(value: any) => {
                 change(value)
             }}
             />
@@ -179,7 +220,7 @@ export default App;
 :::demo
 
 ```tsx
-import  React, {useState} from "react";
+import  React from "react";
 import { Range,Cell,Toast } from '@nutui/nutui-react';
 
 const App = () => {
@@ -195,7 +236,7 @@ const App = () => {
         <Range
             modelValue={20}
             hiddenTag
-            change={(value: any) => {
+            onChange={(value: any) => {
                 change(value)
             }}
             />
@@ -213,7 +254,7 @@ export default App;
 :::demo
 
 ```tsx
-import  React, {useState} from "react";
+import  React from "react";
 import { Range,Cell,Toast } from '@nutui/nutui-react';
 
 const App = () => {
@@ -229,7 +270,7 @@ const App = () => {
         <Range
             modelValue={50}
             disabled
-            change={(value: any) => {
+            onChange={(value: any) => {
                 change(value)
             }}
             />
@@ -246,7 +287,7 @@ export default App;
 :::demo
 
 ```tsx
-import  React, {useState} from "react";
+import  React  from "react";
 import { Range,Cell,Toast } from '@nutui/nutui-react';
 
 const App = () => {
@@ -264,7 +305,7 @@ const App = () => {
             inactiveColor="rgba(163,184,255,1)"
             buttonColor="rgba(52,96,250,1)"
             activeColor="linear-gradient(315deg, rgba(73,143,242,1) 0%,rgba(73,101,242,1) 100%)"
-            change={(value: number) => {
+            onChange={(value: number) => {
                 change(value)
             }}
             />
@@ -301,7 +342,7 @@ const App = () => {
         <Range
             modelValue={value2}
             button={<div className="range-custom-button">{value2}</div>}
-            change={(value: number) => {
+            onChange={(value: number) => {
                 change(value, 'value2')
             }}
             />
@@ -350,8 +391,8 @@ const App = () => {
         <Range
             modelValue={value3}
             vertical
-            change={(value: number) => {
-            change(value, 'value3')
+            onChange={(value: number) => {
+               change(value, 'value3')
             }}
         />
         </div>
@@ -360,8 +401,8 @@ const App = () => {
             modelValue={value4}
             vertical
             range
-            change={(value: number) => {
-            change(value, 'value4')
+            onChange={(value: number) => {
+               change(value, 'value4')
             }}
         />
         </div>
@@ -426,7 +467,7 @@ const App = () => {
             modelValue={value5}
             hiddenRange
             marks={marks}
-            change={(value: number) => {
+            onChange={(value: number) => {
               change(value, 'value5')
             }}
           />
@@ -436,7 +477,7 @@ const App = () => {
             modelValue={value6}
             marks={marks}
             range
-            change={(value: number) => {
+            onChange={(value: number) => {
               change(value, 'value6')
             }}
           />
@@ -447,7 +488,7 @@ const App = () => {
             vertical
             hiddenRange
             marks={marks}
-            change={(value: number) => {
+            onChange={(value: number) => {
               change(value, 'value7')
             }}
           />
@@ -456,7 +497,7 @@ const App = () => {
             vertical
             marks={marks}
             range
-            change={(value: number) => {
+            onChange={(value: number) => {
               change(value, 'value8')
             }}
           />
@@ -478,6 +519,9 @@ export default App;
 | range         | 是否开启双滑块模式 | Boolean          | `false`                  |
 | max           | 最大值             | Number、String   | `100`                    |
 | min           | 最小值             | Number、String   | `0`                      |
+| maxDesc`v1.3.12`     | 最大值描述          | Number、String   | -                    |
+| minDesc`v1.3.12`     | 最小值描述          | Number、String   | -                      |
+| curValueDesc`v1.3.12` | 当前值描述          | Number、String   | -                    |
 | step          | 步长               | Number、String   | `1`                      |
 | disabled      | 是否禁用滑块       | Boolean          | `false`                  |
 | vertical`v1.2.2` | 是否竖向展示 | Boolean | `false` |
@@ -492,12 +536,29 @@ export default App;
 
 | 事件名    | 说明                     | 回调参数        |
 | --------- | ------------------------ | --------------- |
-| change    | 进度变化且结束拖动后触发 | value: 当前进度 |
-| dragStart | 开始拖动时触发           | -               |
-| dragEnd   | 结束拖动时触发           | -               |
+| onChange `v1.3.8`   | 进度变化且结束拖动后触发 | value: 当前进度 |
+| onDragStart `v1.3.8` | 开始拖动时触发           | -               |
+| onDragEnd `v1.3.8`  | 结束拖动时触发           | -               |
 
 ### Slots
 
 | 名称   | 说明           |
 | ------ | -------------- |
 | button | 自定义滑动按钮 |
+
+
+## 主题定制
+
+### 样式变量
+
+组件提供了下列 CSS 变量，可用于自定义样式，使用方法请参考 [ConfigProvider 组件](#/zh-CN/component/configprovider)。
+
+| 名称 | 默认值 |
+| --- | --- |
+| --nutui-range-tip-font-color | ` $gray1` |
+| --nutui-range-bg-color | ` rgba(#fa2c19, 0.5)` |
+| --nutui-range-bg-color-tick | ` #fa958c` |
+| --nutui-range-bar-btn-bg-color | ` $white` |
+| --nutui-range-bar-btn-width | ` 24px` |
+| --nutui-range-bar-btn-height | ` 24px` |
+| --nutui-range-bar-btn-border | `  1px solid $primary-color` |

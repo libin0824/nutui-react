@@ -1,6 +1,7 @@
 import React from 'react'
+import { BasicComponent } from '@/utils/typings'
 
-export interface ITableProps {
+export interface BasicTableProps extends BasicComponent {
   className: string
   style: React.CSSProperties
   columns: Array<TableColumnProps>

@@ -1,12 +1,22 @@
-import React, { CSSProperties, FunctionComponent, ReactNode } from 'react'
-import { useConfig } from '@/packages/configprovider'
+import React, {
+  CSSProperties,
+  FunctionComponent,
+  ReactNode,
+  useContext,
+} from 'react'
+import { useConfig } from '@/packages/configprovider/configprovider.taro'
 import bem from '@/utils/bem'
-import Icon from '@/packages/icon'
+import Icon from '@/packages/icon/index.taro'
+
+import { BasicComponent, ComponentDefaults } from '@/utils/typings'
+import GridContext from '../grid/grid.taro.context'
 
 type GridDirection = 'horizontal' | 'vertical'
 
-export interface GridItemProps {
+export interface GridItemProps extends BasicComponent {
   text: string | ReactNode
+  fontSize: string | number
+  color: string
   icon: string | ReactNode
   iconSize?: string | number
   iconColor?: string
@@ -22,8 +32,12 @@ export interface GridItemProps {
   reverse: boolean
   direction: GridDirection
 }
+
 const defaultProps = {
+  ...ComponentDefaults,
   text: '',
+  fontSize: '',
+  color: '',
   icon: '',
   iconSize: '',
   iconColor: '',
@@ -49,6 +63,8 @@ export const GridItem: FunctionComponent<
     gutter,
     square,
     text,
+    fontSize,
+    color,
     icon,
     iconColor,
     iconSize,
@@ -58,10 +74,16 @@ export const GridItem: FunctionComponent<
     center,
     reverse,
     direction,
+    iconClassPrefix,
+    iconFontClassName,
+    onClick,
     ...rest
-  } = { ...defaultProps, ...props }
+  } = {
+    ...defaultProps,
+    ...props,
+  }
   const b = bem('grid-item')
-
+  const context = useContext(GridContext)
   const pxCheck = (value: string | number): string => {
     return Number.isNaN(Number(value)) ? String(value) : `${value}px`
   }
@@ -96,11 +118,39 @@ export const GridItem: FunctionComponent<
     return typeof icon === 'string'
   }
 
+  const handleClick = (e: any) => {
+    onClick && onClick(e)
+    context.onClick &&
+      context.onClick(
+        {
+          text,
+          icon,
+          iconSize,
+          iconColor,
+          parentIconSize,
+          parentIconColor,
+          index,
+          columnNum,
+          border,
+          gutter,
+          center,
+          square,
+          reverse,
+          direction,
+          fontSize,
+          color,
+        },
+        index
+      )
+  }
+
   return (
-    <div className={b()} style={rootStyle()} {...rest}>
+    <div className={b()} style={rootStyle()} {...rest} onClick={handleClick}>
       <div className={contentClass()}>
         {icon && isIconName() ? (
           <Icon
+            classPrefix={iconClassPrefix}
+            fontClassName={iconFontClassName}
             name={icon as string}
             size={iconSize || parentIconSize}
             color={iconColor || parentIconColor}
@@ -108,7 +158,11 @@ export const GridItem: FunctionComponent<
         ) : (
           <>{icon}</>
         )}
-        {text && <div className="nut-grid-item__text">{text}</div>}
+        {text && (
+          <div className="nut-grid-item__text" style={{ fontSize, color }}>
+            {text}
+          </div>
+        )}
         {children && <>{children}</>}
       </div>
     </div>

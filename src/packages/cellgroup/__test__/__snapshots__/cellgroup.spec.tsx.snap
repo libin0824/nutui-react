@@ -3,16 +3,13 @@
 exports[`prop title desc subtitle 1`] = `
 <div>
   <div
-    class="nut-cell-group nutui-cell-group"
+    class="nut-cell-group"
   >
     <div
       class="nut-cell-group__title"
     >
       链接 | 分组用法
     </div>
-    <div
-      class="nut-cell-group__desc"
-    />
     <div
       class="nut-cell-group__wrap"
     >

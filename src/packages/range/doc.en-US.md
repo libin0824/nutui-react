@@ -7,7 +7,9 @@ Slide the input bar to select a value within a given range.
 ### Install
 
 ```javascript
+// react
 import { Range } from '@nutui/nutui-react';
+
 ```
 
 ## Demo
@@ -28,6 +30,46 @@ const App = () => {
     <>
         <Cell style={cellStyle}>
             <Range modelValue={40} />
+        </Cell>
+    </>
+    )
+};
+
+export default App;
+
+```
+:::
+
+
+### Range Desc
+
+:::demo
+
+```tsx
+import  React, {useState} from "react";
+import { Range,Cell,Toast } from '@nutui/nutui-react';
+
+const App = () => {
+    const [value, SetValue] = useState(40)
+    const change = (value: number, name?: string) => {
+        Toast.text(`value：${value}`)
+        SetValue(value)
+    }
+    const cellStyle = {
+        padding: '40px 18px',
+    }
+    return (
+    <>
+        <Cell style={cellStyle}>
+           <Range
+            modelValue={value}
+            minDesc="0%"
+            maxDesc="100%"
+            curValueDesc={`${value}%`}
+            onChange={(value) => {
+              change(value)
+            }}
+          />
         </Cell>
     </>
     )
@@ -58,7 +100,7 @@ const App = () => {
         <Range
             range
             modelValue={value0}
-            change={(value) => {
+            onChange={(value) => {
                 change(value)
             }}
         />
@@ -92,7 +134,7 @@ const App = () => {
             modelValue={0}
             max={10}
             min={-10}
-            change={(value) => {
+            onChange={(value) => {
                 change(value)
             }}
             />
@@ -127,7 +169,7 @@ const App = () => {
         <Range
             modelValue={value1}
             step={5}
-            change={(value: any) => {
+            onChange={(value: any) => {
                 change(value, 'value1')
             }}
             />
@@ -145,7 +187,7 @@ export default App;
 :::demo
 
 ```tsx
-import  React, {useState} from "react";
+import  React from "react";
 import { Range,Cell,Toast } from '@nutui/nutui-react';
 
 const App = () => {
@@ -161,7 +203,7 @@ const App = () => {
         <Range
             modelValue={30}
             hiddenRange
-            change={(value: any) => {
+            onChange={(value: any) => {
                 change(value)
             }}
             />
@@ -179,7 +221,7 @@ export default App;
 :::demo
 
 ```tsx
-import  React, {useState} from "react";
+import  React  from "react";
 import { Range,Cell,Toast } from '@nutui/nutui-react';
 
 const App = () => {
@@ -195,7 +237,7 @@ const App = () => {
         <Range
             modelValue={20}
             hiddenTag
-            change={(value: any) => {
+            onChange={(value: any) => {
                 change(value)
             }}
             />
@@ -213,7 +255,7 @@ export default App;
 :::demo
 
 ```tsx
-import  React, {useState} from "react";
+import  React from "react";
 import { Range,Cell,Toast } from '@nutui/nutui-react';
 
 const App = () => {
@@ -229,7 +271,7 @@ const App = () => {
         <Range
             modelValue={50}
             disabled
-            change={(value: any) => {
+            onChange={(value: any) => {
                 change(value)
             }}
             />
@@ -246,7 +288,7 @@ export default App;
 :::demo
 
 ```tsx
-import  React, {useState} from "react";
+import  React from "react";
 import { Range,Cell,Toast } from '@nutui/nutui-react';
 
 const App = () => {
@@ -264,7 +306,7 @@ const App = () => {
             inactiveColor="rgba(163,184,255,1)"
             buttonColor="rgba(52,96,250,1)"
             activeColor="linear-gradient(315deg, rgba(73,143,242,1) 0%,rgba(73,101,242,1) 100%)"
-            change={(value: number) => {
+            onChange={(value: number) => {
                 change(value)
             }}
             />
@@ -301,7 +343,7 @@ const App = () => {
         <Range
             modelValue={value2}
             button={<div className="range-custom-button">{value2}</div>}
-            change={(value: number) => {
+            onChange={(value: number) => {
                 change(value, 'value2')
             }}
             />
@@ -350,8 +392,8 @@ const App = () => {
         <Range
             modelValue={value3}
             vertical
-            change={(value: number) => {
-            change(value, 'value3')
+            onChange={(value: number) => {
+               change(value, 'value3')
             }}
         />
         </div>
@@ -360,8 +402,8 @@ const App = () => {
             modelValue={value4}
             vertical
             range
-            change={(value: number) => {
-            change(value, 'value4')
+            onChange={(value: number) => {
+               change(value, 'value4')
             }}
         />
         </div>
@@ -426,7 +468,7 @@ const App = () => {
             modelValue={value5}
             hiddenRange
             marks={marks}
-            change={(value: number) => {
+            onChange={(value: number) => {
               change(value, 'value5')
             }}
           />
@@ -436,7 +478,7 @@ const App = () => {
             modelValue={value6}
             marks={marks}
             range
-            change={(value: number) => {
+            onChange={(value: number) => {
               change(value, 'value6')
             }}
           />
@@ -447,7 +489,7 @@ const App = () => {
             vertical
             hiddenRange
             marks={marks}
-            change={(value: number) => {
+            onChange={(value: number) => {
               change(value, 'value7')
             }}
           />
@@ -456,7 +498,7 @@ const App = () => {
             vertical
             marks={marks}
             range
-            change={(value: number) => {
+            onChange={(value: number) => {
               change(value, 'value8')
             }}
           />
@@ -478,6 +520,9 @@ export default App;
 | range         | Whether to enable dual slider mode | Boolean          | `false`                  |
 | max           | maximum             | Number、String   | `100`                    |
 | min           | minimum             | Number、String   | `0`                      |
+| maxDesc`v1.3.12`     | maximum  description        | Number、String   | -                    |
+| minDesc`v1.3.12`     | minimum description          | Number、String   | -                      |
+| curValueDesc`v1.3.12` | current progress percentage description  | Number、String |-                    |
 | step          | step size               | Number、String   | `1`                      |
 | disabled      | Whether to disable the slider       | Boolean          | `false`                  |
 | vertical      | Whether to display vertically | Boolean | `false` |
@@ -492,12 +537,29 @@ export default App;
 
 | Event             | Description                     | Arguments        |
 | ------------------ | ------------------------ | --------------- |
-| change             | Triggered when the progress changes and the drag is over | value: progress |
-| dragStart         | Triggered when dragging starts           | -               |
-| dragEnd           | Triggered when the drag is over           | -               |
+| onChange `v1.3.8`           | Triggered when the progress changes and the drag is over | value: progress |
+| onDragStart `v1.3.8`        | Triggered when dragging starts           | -               |
+| onDragEnd `v1.3.8`         | Triggered when the drag is over           | -               |
 
 ### Slots
 
 | Name   | Description           |
 | ------ | -------------- |
 | button | custom slide button |
+
+
+## Theming
+
+### CSS Variables
+
+The component provides the following CSS variables, which can be used to customize styles. Please refer to [ConfigProvider component](#/en-US/component/configprovider).
+
+| Name | Default Value |
+| --- | --- |
+| --nutui-range-tip-font-color | ` $gray1` |
+| --nutui-range-bg-color | ` rgba(#fa2c19, 0.5)` |
+| --nutui-range-bg-color-tick | ` #fa958c` |
+| --nutui-range-bar-btn-bg-color | ` $white` |
+| --nutui-range-bar-btn-width | ` 24px` |
+| --nutui-range-bar-btn-height | ` 24px` |
+| --nutui-range-bar-btn-border | `  1px solid $primary-color` |

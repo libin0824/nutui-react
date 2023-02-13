@@ -3,7 +3,7 @@ import classNames from 'classnames'
 import bem from '@/utils/bem'
 import Utils from '@/utils/date'
 import requestAniFrame from '@/utils/raf'
-import { useConfig } from '@/packages/configprovider'
+import { useConfig } from '@/packages/configprovider/configprovider.taro'
 import { getRectByTaro } from '../../utils/useClientRect'
 
 type InputDate = string | string[]
@@ -377,7 +377,7 @@ export const CalendarItem: FunctionComponent<
       if (type === 'end') {
         monthsPanel.current.style.webkitTransition = `transform ${time}ms cubic-bezier(0.19, 1, 0.22, 1)`
         clearTimeout(state.timer)
-        state.timer = setTimeout(() => {
+        state.timer = window.setTimeout(() => {
           loadScroll()
         }, time)
       } else {
@@ -611,7 +611,7 @@ export const CalendarItem: FunctionComponent<
                             {day.type === 'curr' ? day.day : ''}
                           </div>
                           {isCurrDay(month, day.day) ? (
-                            <div className="calendar-curr-tips">
+                            <div className="calendar-curr-tip-curr">
                               {locale.calendaritem.today}
                             </div>
                           ) : (

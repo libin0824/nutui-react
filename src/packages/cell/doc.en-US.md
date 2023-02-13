@@ -6,8 +6,10 @@ The cell is a single display item in the list.
 
 ### Install
 
-```javascript
+```ts
+// react
 import { Cell, CellGroup } from '@nutui/nutui-react'
+
 ```
 
 ## Demo
@@ -32,7 +34,7 @@ const App = () => {
       <Cell title="Title" subTitle="Subtitle Description" desc="Description" />
       <Cell
         title="Click Test"
-        click={(
+        onClick={(
           event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>
         ) => testClick(event)}
       />
@@ -140,7 +142,6 @@ const App = () => {
           isLink
           url="https://jd.com"
         />
-        <Cell title="Router Jump ’/‘ " to="/" />
       </CellGroup>
     </>
   )
@@ -256,37 +257,73 @@ export default App
 
 ### CellGroup Prop
 
-| 字段  | 说明     | 类型   | 默认值 |
+| Attribute | Description | Type   | Default |
 |-------|----------|--------|--------|
-| title | 分组标题 | String | -      |
-| desc  | 分组描述 | String | -      |
-| titleSlot        | 自定义`title`标题区域                         | React.ReactNode          | -  |
-| descSlot        | 自定义`desc`描述区域                         | React.ReactNode          | -  |
+| title | Title | String | -      |
+| desc  | Description | String | -      |
+| titleSlot        | Custom`title`slot                        | React.ReactNode          | -  |
+| descSlot        | Custom`desc`slot                         | React.ReactNode          | -  |
 
 ### Cell Prop
 
-| 字段                   | 说明                                                                                           | 类型             | 默认值 |
-|------------------------|------------------------------------------------------------------------------------------------|------------------|--------|
-| title                  | 标题名称                      |  React.ReactNode           | -      |
-| subTitle              | 左侧副标题                           |  React.ReactNode           | -      |
-| desc                   | 右侧描述                                     | String      | -      |
-| descTextAlign | 右侧描述文本对齐方式 [text-align](https://www.w3school.com.cn/cssref/pr_text_text-align.asp) | String | right  |
-| isLink                | 是否展示右侧箭头并开启点击反馈            | Boolean          | false  |
-| to      | 点击后跳转的目标路由对象 | String  | -      |
-| replace | 是否在跳转时替换当前页面历史                             | Boolean          | false  |
-| roundRadius           | 圆角半径                                      | String| Number            | 6px    |
-| url     | 点击后跳转的链接地址                                         | String           | -      |
-| icon                   | 左侧 [图标名称](#/icon) 或图片链接              | String           | -      |
-| center        | 是否使内容垂直居中                                                                             | Boolean          | false  |
-| size        | 单元格大小，可选值为 `large`                           | String          | -  |
-| iconSlot        | 自定义左侧`icon`区域                          | React.ReactNode          | -  |
-| linkSlot        | 自定义右侧`link`区域                         | React.ReactNode          | -  |
-
+| Attribute         | Description                                                                                              | Type             | Default          |
+|-------------------|----------------------------------------------------------------------------------------------------------|------------------|------------------|
+| title             | Title                      |  React.ReactNode           | -      |
+| subTitle          | Subtitle                           |  React.ReactNode           | -      |
+| desc              | Description                                     | String      | -      |
+| descTextAlign     | Right description text alignment [text-align](https://www.w3school.com.cn/cssref/pr_text_text-align.asp), is only available when displaying desc | String | right  |
+| isLink            | Whether to show the right arrow and turn on click feedback            | Boolean          | false  |
+| to`v1.4.0(Abandon)`       | C Target route of the link | String  | -      |
+| replace           | If true, the navigation will not leave a history record                             | Boolean          | false  |
+| roundRadius`v1.2.0` | Corner radius                                      | String            | 6px    |
+| url               | Link                                         | String           | -      |
+| icon              |  Left [icon name](#/icon) or image              | String           | -      |
+| center`v1.2.0`    | Whether to center content                                                                              | Boolean          | false  |
+| size`v1.2.0`      | Size, can be set to `large`                         | String          | -  |
+| iconSlot`v1.2.0`  |  Custom Left `icon`                        | React.ReactNode          | -  |
+| linkSlot`v1.2.0`  | Custom Right`link`                      | React.ReactNode          | -  |
 
 
 
 ### Cell Event
 
-| 名称  | 说明     | 回调参数                                                       |
-| ----- | -------- | -------------------------------------------------------------- |
-| click | 点击事件 | event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent> |
+| Event | Description                  | Arguments   |
+|-------|------------------------------|-------------|
+| onClick`v1.3.8` | Emitted when cell is clicked | event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent> |
+
+
+
+## Theming
+
+### CSS Variables
+
+The component provides the following CSS variables, which can be used to customize styles. Please refer to [ConfigProvider component](#/en-US/component/configprovider).
+
+| Name | Default Value |
+| --- | --- |
+| --nutui-cell-color | ` $gray1` |
+| --nutui-cell-title-font | ` $font-size-2` |
+| --nutui-cell-title-desc-font | ` $font-size-1` |
+| --nutui-cell-desc-font | ` $font-size-2` |
+| --nutui-cell-desc-color | ` $gray2` |
+| --nutui-cell-subtitle-color | ` $gray2` |
+| --nutui-cell-border-radius | ` 6px` |
+| --nutui-cell-padding | ` 13px 16px` |
+| --nutui-cell-line-height | ` 20px` |
+| --nutui-cell-after-right | ` 16px` |
+| --nutui-cell-after-border-bottom | `  2px solid #f5f6f7` |
+| --nutui-cell-default-icon-margin | `  0 4px 0 0px` |
+| --nutui-cell-large-title-font | `  $font-size-large` |
+| --nutui-cell-large-title-desc-font | `  $font-size-base` |
+| --nutui-cell-large-padding | ` 15px 16px` |
+| --nutui-cell-background | ` $gray6` |
+| --nutui-cell-box-shaow | `  0px 1px 7px 0px rgba(237, 238, 241, 1)` |
+| --nutui-cell-group-title-padding | `  0 10px` |
+| --nutui-cell-group-title-color | ` #909ca4` |
+| --nutui-cell-group-title-font-size | `  $font-size-2` |
+| --nutui-cell-group-title-line-height | `  20px` |
+| --nutui-cell-group-desc-padding | ` 0 10px` |
+| --nutui-cell-group-desc-color | ` #909ca4` |
+| --nutui-cell-group-desc-font-size | `  $font-size-1` |
+| --nutui-cell-group-desc-line-height | `  16px` |
+| --nutui-cell-group-background-color | `  $white` |

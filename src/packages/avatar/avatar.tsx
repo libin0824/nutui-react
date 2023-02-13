@@ -11,9 +11,12 @@ import { AvatarContext } from '@/packages/avatargroup/AvatarContext'
 import bem from '@/utils/bem'
 import Icon from '@/packages/icon'
 
-export interface AvatarProps {
+import { BasicComponent, ComponentDefaults } from '@/utils/typings'
+
+export interface AvatarProps extends BasicComponent {
   size: string
   icon: string
+  iconSize?: string | number
   shape: AvatarShape
   bgColor: string
   color: string
@@ -23,13 +26,17 @@ export interface AvatarProps {
   alt: string
   style: React.CSSProperties
   activeAvatar: (e: MouseEvent) => void
+  onActiveAvatar: (e: MouseEvent) => void
   onError: (e: any) => void
 }
 
 export type AvatarShape = 'round' | 'square'
+
 const defaultProps = {
+  ...ComponentDefaults,
   size: '',
   icon: '',
+  iconSize: '',
   bgColor: '#eee',
   color: '#666',
   prefixCls: 'nut-avatar',
@@ -49,10 +56,14 @@ export const Avatar: FunctionComponent<
     url,
     alt,
     icon,
+    iconSize,
     className,
     style,
     activeAvatar,
+    onActiveAvatar,
     onError,
+    iconClassPrefix,
+    iconFontClassName,
     ...rest
   } = {
     ...defaultProps,
@@ -105,7 +116,6 @@ export const Avatar: FunctionComponent<
 
   const avatarLength = (children: any) => {
     for (let i = 0; i < children.length; i++) {
-      console.log('child', children[i], children[i].classList)
       if (
         children[i] &&
         children[i].classList &&
@@ -134,9 +144,8 @@ export const Avatar: FunctionComponent<
   }
 
   const clickAvatar: MouseEventHandler<HTMLDivElement> = (e: any) => {
-    if (props.activeAvatar) {
-      props.activeAvatar(e)
-    }
+    activeAvatar && activeAvatar(e)
+    onActiveAvatar && onActiveAvatar(e)
   }
 
   return (
@@ -154,8 +163,23 @@ export const Avatar: FunctionComponent<
           {(!parent?.propAvatarGroup?.maxCount ||
             avatarIndex <= parent?.propAvatarGroup?.maxCount) && (
             <>
-              {url && <img src={url} alt={alt} onError={errorEvent} />}
-              {icon && <Icon className="icon" name={iconStyles} />}
+              {url && (
+                <img
+                  className="avatar-img"
+                  src={url}
+                  alt={alt}
+                  onError={errorEvent}
+                />
+              )}
+              {icon && (
+                <Icon
+                  classPrefix={iconClassPrefix}
+                  fontClassName={iconFontClassName}
+                  className="icon"
+                  name={iconStyles}
+                  size={iconSize}
+                />
+              )}
               {children && <span className="text">{children}</span>}
             </>
           )}

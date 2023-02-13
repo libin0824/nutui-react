@@ -23,6 +23,9 @@ import Tree from './tree'
 export interface CascaderProps {
   className: string
   style: CSSProperties
+  activeColor: string
+  tabsColor: string
+  poppable: boolean
   visible: boolean // popup 显示状态
   options: CascaderOption[]
   value: string[]
@@ -44,6 +47,9 @@ export interface CascaderProps {
 const defaultProps = {
   className: '',
   style: {},
+  activeColor: '#fa2c19',
+  tabsColor: '',
+  poppable: true,
   visible: false,
   options: [],
   value: [],
@@ -69,6 +75,8 @@ const InternalCascader: ForwardRefRenderFunction<
   const {
     className,
     style,
+    tabsColor,
+    poppable,
     visible,
     options,
     value,
@@ -344,20 +352,10 @@ const InternalCascader: ForwardRefRenderFunction<
     setOptiosData(state.panes)
   }
 
-  return (
-    <div className={`${classes} ${className}`} style={style}>
-      <Popup
-        popClass="cascadar-popup"
-        visible={visible}
-        position="bottom"
-        round
-        closeable={closeable}
-        closeIconPosition={closeIconPosition}
-        closeIcon={closeIcon}
-        onClickOverlay={closePopup}
-        onClickCloseIcon={closePopup}
-      >
-        <div className={b('title')}>{title}</div>
+  const renderItem = () => {
+    return (
+      <div className={`${classes} ${className}`} style={style}>
+        {poppable && <div className={b('title')}>{title}</div>}
         <Tabs
           value={tabvalue}
           titleNode={() => {
@@ -387,7 +385,10 @@ const InternalCascader: ForwardRefRenderFunction<
                     '请选择'}
                   {!(!state.initLoading && state.panes.length) && 'Loading...'}
                 </span>
-                <span className="nut-tabs__titles-item__line" />
+                <span
+                  className="nut-tabs__titles-item__line"
+                  style={{ background: tabsColor }}
+                />
               </div>
             ))
           }}
@@ -415,8 +416,30 @@ const InternalCascader: ForwardRefRenderFunction<
             </TabPane>
           )}
         </Tabs>
-      </Popup>
-    </div>
+      </div>
+    )
+  }
+
+  return (
+    <>
+      {poppable ? (
+        <Popup
+          popClass="cascadar-popup"
+          visible={visible}
+          position="bottom"
+          round
+          closeable={closeable}
+          closeIconPosition={closeIconPosition}
+          closeIcon={closeIcon}
+          onClickOverlay={closePopup}
+          onClickCloseIcon={closePopup}
+        >
+          {renderItem()}
+        </Popup>
+      ) : (
+        renderItem()
+      )}
+    </>
   )
 }
 

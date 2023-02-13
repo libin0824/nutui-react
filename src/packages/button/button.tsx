@@ -7,7 +7,9 @@ import React, {
 } from 'react'
 import Icon from '@/packages/icon'
 
-export interface ButtonProps {
+import { BasicComponent, ComponentDefaults } from '@/utils/typings'
+
+export interface ButtonProps extends BasicComponent {
   className: string
   color: string
   shape: ButtonShape
@@ -32,7 +34,9 @@ export type ButtonType =
   | 'danger'
 export type ButtonSize = 'large' | 'normal' | 'small'
 export type ButtonShape = 'square' | 'round'
+
 const defaultProps = {
+  ...ComponentDefaults,
   className: '',
   color: '',
   shape: 'round',
@@ -62,6 +66,8 @@ export const Button: FunctionComponent<Partial<ButtonProps>> = (props) => {
     onClick,
     className,
     style,
+    iconClassPrefix,
+    iconFontClassName,
     ...rest
   } = {
     ...defaultProps,
@@ -128,18 +134,35 @@ export const Button: FunctionComponent<Partial<ButtonProps>> = (props) => {
   }
 
   return (
-    <div
+    // eslint-disable-next-line react/button-has-type
+    <button
       className={`${btnName} ${className}`}
       style={{ ...btnStyle, ...style }}
       {...rest}
       onClick={(e) => handleClick(e)}
     >
-      <div className="nut-button__warp" style={getStyle()}>
-        {loading && <Icon name="loading" />}
-        {!loading && icon ? <Icon name={icon} /> : ''}
-        {children}
+      <div className="nut-button__warp">
+        {loading && (
+          <Icon
+            classPrefix={iconClassPrefix}
+            fontClassName={iconFontClassName}
+            name="loading"
+          />
+        )}
+        {!loading && icon ? (
+          <Icon
+            classPrefix={iconClassPrefix}
+            fontClassName={iconFontClassName}
+            name={icon}
+          />
+        ) : (
+          ''
+        )}
+        {children && (
+          <div className={icon || loading ? 'text' : ''}>{children}</div>
+        )}
       </div>
-    </div>
+    </button>
   )
 }
 

@@ -9,7 +9,9 @@ import classNames from 'classnames'
 import Icon from '@/packages/icon'
 import bem from '@/utils/bem'
 
-export interface InputNumberProps {
+import { BasicComponent, ComponentDefaults } from '@/utils/typings'
+
+export interface InputNumberProps extends BasicComponent {
   disabled: boolean
   buttonSize: string | number
   min: string | number
@@ -31,8 +33,19 @@ export interface InputNumberProps {
     param: string | number,
     e: MouseEvent | ChangeEvent<HTMLInputElement>
   ) => void
+  onAdd: (e: MouseEvent) => void
+  onReduce: (e: MouseEvent) => void
+  onOverlimit: (e: MouseEvent) => void
+  onBlurFuc: (e: ChangeEvent<HTMLInputElement>) => void
+  onFocus: (e: FocusEvent<HTMLInputElement>) => void
+  onChangeFuc: (
+    param: string | number,
+    e: MouseEvent | ChangeEvent<HTMLInputElement>
+  ) => void
 }
+
 const defaultProps = {
+  ...ComponentDefaults,
   disabled: false,
   buttonSize: '',
   min: 1,
@@ -70,6 +83,14 @@ export const InputNumber: FunctionComponent<
     overlimit,
     blur,
     focus,
+    onAdd,
+    onReduce,
+    onOverlimit,
+    onBlurFuc,
+    onFocus,
+    onChangeFuc,
+    iconClassPrefix,
+    iconFontClassName,
     ...restProps
   } = {
     ...defaultProps,
@@ -92,12 +113,20 @@ export const InputNumber: FunctionComponent<
     height: pxCheck(buttonSize),
     ...style,
   }
-  const addAllow = (value = Number(inputValue)) => {
-    return value < Number(max) && !disabled
+  const addAllow = (value = inputValue) => {
+    if (value || typeof value === 'number') {
+      return value < Number(max) && !disabled
+    } else {
+      return false
+    }
   }
 
-  const reduceAllow = (value = Number(inputValue)) => {
-    return value > Number(min) && !disabled
+  const reduceAllow = (value = inputValue) => {
+    if (value || typeof value === 'number') {
+      return value > Number(min) && !disabled
+    } else {
+      return false
+    }
   }
 
   const iconMinusClasses = classNames('nut-inputnumber__icon', {
@@ -117,6 +146,7 @@ export const InputNumber: FunctionComponent<
     e: MouseEvent | ChangeEvent<HTMLInputElement>
   ) => {
     const outputValue: number | string = fixedDecimalPlaces(value)
+    onChangeFuc && onChangeFuc(outputValue, e)
     change && change(outputValue, e)
     if (!isAsync) {
       if (Number(outputValue) < Number(min)) {
@@ -130,21 +160,25 @@ export const InputNumber: FunctionComponent<
   }
 
   const reduceNumber = (e: MouseEvent) => {
+    onReduce && onReduce(e)
     reduce && reduce(e)
     if (reduceAllow()) {
       const outputValue = Number(inputValue) - Number(step)
       emitChange(outputValue, e)
     } else {
+      onOverlimit && onOverlimit(e)
       overlimit && overlimit(e)
     }
   }
 
   const addNumber = (e: MouseEvent) => {
+    onAdd && onAdd(e)
     add && add(e)
     if (addAllow()) {
       const outputValue = Number(inputValue) + Number(step)
       emitChange(outputValue, e)
     } else {
+      onOverlimit && onOverlimit(e)
       overlimit && overlimit(e)
     }
   }
@@ -152,9 +186,10 @@ export const InputNumber: FunctionComponent<
   const changeValue = (e: ChangeEvent<HTMLInputElement>) => {
     const input = e.target as HTMLInputElement
     change && change(input.valueAsNumber, e)
+    onChangeFuc && onChangeFuc(input.valueAsNumber, e)
     if (!isAsync) {
       if (Number.isNaN(input.valueAsNumber)) {
-        setInputValue(inputValue)
+        setInputValue('')
       } else {
         setInputValue(input.valueAsNumber)
       }
@@ -164,6 +199,7 @@ export const InputNumber: FunctionComponent<
   const focusValue = (e: FocusEvent<HTMLInputElement>) => {
     if (disabled) return
     if (readonly) return
+    onFocus && onFocus(e)
     focus && focus(e)
   }
 
@@ -178,11 +214,14 @@ export const InputNumber: FunctionComponent<
       value = Number(max)
     }
     emitChange(value, e)
+    onBlurFuc && onBlurFuc(e)
     blur && blur(e)
   }
   return (
     <div className={classes} style={styles} {...restProps}>
       <Icon
+        classPrefix={iconClassPrefix}
+        fontClassName={iconFontClassName}
         className={iconMinusClasses}
         size={buttonSize}
         name="minus"
@@ -201,6 +240,8 @@ export const InputNumber: FunctionComponent<
         onFocus={focusValue}
       />
       <Icon
+        classPrefix={iconClassPrefix}
+        fontClassName={iconFontClassName}
         className={iconAddClasses}
         size={buttonSize}
         name="plus"

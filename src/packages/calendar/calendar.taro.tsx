@@ -1,8 +1,8 @@
 import React, { FunctionComponent } from 'react'
-import Popup from '@/packages/popup'
+import Popup from '@/packages/popup/index.taro'
 import CalendarItem from '@/packages/calendaritem/index.taro'
 import Utils from '@/utils/date'
-import { useConfig } from '@/packages/configprovider'
+import { useConfig } from '@/packages/configprovider/configprovider.taro'
 
 export interface CalendarProps {
   type?: string
@@ -68,9 +68,12 @@ export const Calendar: FunctionComponent<
           visible={visible}
           position="bottom"
           round
+          duration={0.5}
           closeable
+          destroyOnClose
           onClickOverlay={closePopup}
           onClickCloseIcon={closePopup}
+          style={{ height: '85vh' }}
         >
           <CalendarItem
             type={type}

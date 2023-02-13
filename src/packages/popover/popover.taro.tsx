@@ -6,9 +6,13 @@ import React, {
   useState,
 } from 'react'
 import Trigger from './Trigger'
-import Icon from '@/packages/icon'
-import Overlay from '@/packages/overlay'
+import Icon from '@/packages/icon/index.taro'
+import Overlay from '@/packages/overlay/index.taro'
 import { getRectByTaro } from '../../utils/useClientRect'
+
+import { BasicComponent, ComponentDefaults } from '@/utils/typings'
+
+import { ITouchEvent } from '@tarojs/components'
 
 export type PopoverTheme = 'light' | 'dark'
 
@@ -32,7 +36,7 @@ export interface List {
   disabled?: boolean
 }
 
-export interface PopoverProps {
+export interface PopoverProps extends BasicComponent {
   list: List[]
   theme: PopoverTheme
   location: PopoverLocation | string
@@ -41,18 +45,19 @@ export interface PopoverProps {
   className: string
   style?: CSSProperties
   children?: React.ReactNode
-  onClick: (e: React.MouseEvent) => void
+  onClick: (e: React.MouseEvent | ITouchEvent) => void
   onChoose: (item: List, index: number) => void
 }
 
 const defaultProps = {
+  ...ComponentDefaults,
   list: [],
   theme: 'light',
   location: 'bottom',
   visible: false,
   offset: 20,
   className: '',
-  onClick: (e: React.MouseEvent) => {},
+  onClick: (e: React.MouseEvent | ITouchEvent) => {},
   onChoose: (item, index) => {},
 } as PopoverProps
 export const Popover: FunctionComponent<
@@ -69,6 +74,8 @@ export const Popover: FunctionComponent<
     style,
     onClick,
     onChoose,
+    iconClassPrefix,
+    iconFontClassName,
     ...reset
   } = {
     ...defaultProps,
@@ -131,7 +138,7 @@ export const Popover: FunctionComponent<
     }`
   }
 
-  const handleClick = (e: React.MouseEvent) => {
+  const handleClick = (e: React.MouseEvent | ITouchEvent) => {
     if (props.onClick) {
       props.onClick(e)
     }
@@ -170,6 +177,8 @@ export const Popover: FunctionComponent<
                     >
                       {item.icon ? (
                         <Icon
+                          classPrefix={iconClassPrefix}
+                          fontClassName={iconFontClassName}
                           className="popover-menu-item-img"
                           name={item.icon}
                         />

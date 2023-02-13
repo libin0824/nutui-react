@@ -7,7 +7,9 @@
 ### 安裝
 
 ```ts
+// react
 import { Switch } from '@nutui/nutui-react';
+
 ```
 
 ## 代碼演示
@@ -51,7 +53,7 @@ export default App;
 ```
 :::
 
-### change事件
+### onChange事件
 
 :::demo
 ```tsx
@@ -59,12 +61,12 @@ import  React from "react";
 import { Switch } from '@nutui/nutui-react';
 
 const App = () => {
-  const change = (value: boolean, event: Event) => {
-    alert(`觸發了change事件，開關狀態：${value}`)
+  const onChange = (value: boolean, event: Event) => {
+    alert(`觸發了onChange事件，開關狀態：${value}`)
   }
   return ( 
     <>   
-    <Switch change={(value, event) => change(value, event)} />
+    <Switch onChange={(value, event) => onChange(value, event)} />
     </>
   );
 };  
@@ -82,7 +84,7 @@ import { Switch } from '@nutui/nutui-react';
 const App = () => {
   const [checkedAsync, setCheckedAsync] = useState(true)
   
-  const changeAsync = (value: boolean, event: Event) => {
+  const onChangeAsync = (value: boolean, event: Event) => {
     alert(`2秒後異步觸發 ${value}`)
     setTimeout(() => {
       setCheckedAsync(value)
@@ -93,7 +95,7 @@ const App = () => {
     <Switch
       checked={checkedAsync}
       isAsync
-      change={(value, event) => changeAsync(value, event)}
+      onChange={(value, event) => onChangeAsync(value, event)}
      />
     </>
   );
@@ -161,4 +163,22 @@ export default App;
 
 | 事件名 | 說明           | 回調參數                      |
 |--------|----------------|-------------------------------|
-| change | 切換開關時觸發 | (value: boolean,event: Event) |
+| onChange `v1.3.8`| 切換開關時觸發 | (value: boolean,event: Event) |
+
+
+## 主題定制
+
+### 樣式變量
+
+組件提供了下列 CSS 變量，可用於自定義樣式，使用方法請參考 [ConfigProvider 組件](#/zh-CN/component/configprovider)。
+
+| 名稱 | 默認值 |
+| --- | --- |
+| --nutui-switch-close-bg-color | ` #ebebeb` |
+| --nutui-switch-close--cline-bg-color | `  #f0f0f0` |
+| --nutui-switch-width | ` 36px` |
+| --nutui-switch-height | ` 21px` |
+| --nutui-switch-line-height | ` 21px` |
+| --nutui-switch-border-radius | ` 21px` |
+| --nutui-switch-inside-width | ` 13px` |
+| --nutui-switch-inside-height | ` 13px` |

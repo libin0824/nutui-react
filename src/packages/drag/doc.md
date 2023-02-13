@@ -7,12 +7,14 @@
 ### 安装
 
 ```javascript
+// react
 import { Drag } from '@nutui/nutui-react'
+
 ```
 
 ## 代码演示
 
-### 基础用法
+
 
 ## 基本用法
 
@@ -97,7 +99,7 @@ const App = () => {
   }
   return (
     <Drag direction="x" attract>
-      <div className="touch-dom" style={btnStyle}>拖动我</div>
+      <div className="touch-dom" style={btnStyle}>按钮</div>
     </Drag>
  );
 };

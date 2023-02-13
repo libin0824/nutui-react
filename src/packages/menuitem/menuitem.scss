@@ -3,8 +3,9 @@
 
 .nut-theme-dark {
   .nut-menu-item__content {
+    background: $dark6;
     .nut-menu-item__option {
-      color: $dark-color;
+      color: $dark1;
     }
   }
 }
@@ -15,7 +16,7 @@
   overflow-y: auto;
   display: flex;
   flex-wrap: wrap;
-  background: #fff;
+  background: $menu-item-content-bg-color;
 
   &_fixed {
     width: 100%;
@@ -42,11 +43,15 @@
   }
 }
 
-.nut-menu-item__wrap {
-  position: fixed;
+.nut-menu-item__wrap,
+.nut-menu-item__wrap-up {
+  position: absolute;
   width: 100%;
   z-index: 2052;
   overflow: hidden;
+}
+.nut-menu-item__wrap-up {
+  bottom: $menu-bar-line-height;
 }
 
 .overlay-fade-enter-active.nut-menu__overlay {
@@ -74,10 +79,12 @@
 
 .menu-item-enter {
   opacity: 0;
+  transform: translate(0, -30px);
 }
 
 .menu-item-enter-done {
   opacity: 1;
+  transform: translate(0, 0);
   transition: all 100ms;
 }
 
@@ -87,6 +94,25 @@
 }
 
 .menu-item-exit-done {
+  opacity: 0;
+  transition: all 100ms;
+}
+
+.menu-item-up-enter {
+  opacity: 0;
+  transform: translate(0, 30px);
+}
+.menu-item-up-enter-done {
+  opacity: 1;
+  transform: translate(0, 0);
+  transition: all 100ms;
+}
+.menu-item-up-exit {
+  opacity: 1;
+  transition: all 100ms;
+}
+
+.menu-item-up-exit-done {
   opacity: 0;
   transition: all 100ms;
 }

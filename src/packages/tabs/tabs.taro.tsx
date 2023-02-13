@@ -1,7 +1,8 @@
 import React, { FunctionComponent, useEffect, useRef, useState } from 'react'
 import classNames from 'classnames'
 import bem from '@/utils/bem'
-import Icon from '@/packages/icon'
+import Icon from '@/packages/icon/index.taro'
+import { BasicComponent, ComponentDefaults } from '@/utils/typings'
 
 class Title {
   title = ''
@@ -16,9 +17,11 @@ class Title {
   constructor() {}
 }
 export type TabsSize = 'large' | 'normal' | 'small'
-export interface TabsProps {
+
+export interface TabsProps extends BasicComponent {
   className: string
   style: React.CSSProperties
+  tabStyle: React.CSSProperties
   value: string | number
   color: string
   background: string
@@ -35,7 +38,10 @@ export interface TabsProps {
   autoHeight: boolean
   children?: React.ReactNode
 }
+
 const defaultProps = {
+  ...ComponentDefaults,
+  tabStyle: {},
   value: 0,
   color: '',
   background: '',
@@ -55,6 +61,7 @@ export const Tabs: FunctionComponent<Partial<TabsProps>> = (props) => {
   const {
     value,
     color,
+    tabStyle,
     background,
     direction,
     type,
@@ -69,8 +76,13 @@ export const Tabs: FunctionComponent<Partial<TabsProps>> = (props) => {
     onChange,
     className,
     autoHeight,
+    iconClassPrefix,
+    iconFontClassName,
     ...rest
-  } = { ...defaultProps, ...props }
+  } = {
+    ...defaultProps,
+    ...props,
+  }
 
   const [currentItem, setCurrentItem] = useState<Title>({ index: 0 } as Title)
   const titles = useRef<Title[]>([])
@@ -84,10 +96,11 @@ export const Tabs: FunctionComponent<Partial<TabsProps>> = (props) => {
         return null
       }
       const title = new Title()
-      if (child?.props?.title || child?.props?.paneKey) {
-        title.title = child.props?.title
-        title.paneKey = child.props?.paneKey || idx
-        title.disabled = child.props?.disabled
+      const childProps = child?.props
+      if (childProps?.title || childProps?.paneKey) {
+        title.title = childProps?.title
+        title.paneKey = childProps?.paneKey || idx
+        title.disabled = childProps?.disabled
         title.index = idx
         if (title.paneKey === value) {
           currentIndex = idx
@@ -140,7 +153,7 @@ export const Tabs: FunctionComponent<Partial<TabsProps>> = (props) => {
 
   return (
     <div className={classes} {...rest}>
-      <div className={classesTitle} style={{ background }}>
+      <div className={classesTitle} style={{ ...tabStyle, background }}>
         {!!titleNode && typeof titleNode === 'function'
           ? titleNode()
           : titles.current.map((item, index) => {
@@ -168,7 +181,12 @@ export const Tabs: FunctionComponent<Partial<TabsProps>> = (props) => {
                       className={`${b('')}__titles-item__smile`}
                       style={tabsActiveStyle}
                     >
-                      <Icon color={color} name="joy-smile" />
+                      <Icon
+                        classPrefix={iconClassPrefix}
+                        fontClassName={iconFontClassName}
+                        color={color}
+                        name="joy-smile"
+                      />
                     </div>
                   )}
                   <div
@@ -188,28 +206,30 @@ export const Tabs: FunctionComponent<Partial<TabsProps>> = (props) => {
               )
             })}
       </div>
-      <div className={`${b('')}__content`} style={contentStyle}>
-        {React.Children.map(children, (child, idx) => {
-          if (!React.isValidElement(child)) {
-            return null
-          }
-
-          let childProps = {
-            ...child.props,
-            activeKey: value,
-          }
-
-          if (
-            String(value) !== String(child.props?.paneKey || idx) &&
-            autoHeight
-          ) {
-            childProps = {
-              ...childProps,
-              autoHeightClassName: 'inactive',
+      <div className={`${b('')}__content__wrap`}>
+        <div className={`${b('')}__content`} style={contentStyle}>
+          {React.Children.map(children, (child, idx) => {
+            if (!React.isValidElement(child)) {
+              return null
             }
-          }
-          return React.cloneElement(child, childProps)
-        })}
+
+            let childProps = {
+              ...child.props,
+              activeKey: value,
+            }
+
+            if (
+              String(value) !== String(child.props?.paneKey || idx) &&
+              autoHeight
+            ) {
+              childProps = {
+                ...childProps,
+                autoHeightClassName: 'inactive',
+              }
+            }
+            return React.cloneElement(child, childProps)
+          })}
+        </div>
       </div>
     </div>
   )

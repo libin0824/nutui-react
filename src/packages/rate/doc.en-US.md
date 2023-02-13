@@ -7,7 +7,9 @@ Use for quick rating actions, or to showcase reviews.
 ### Install
 
 ```ts
+// react
 import { Rate } from '@nutui/nutui-react';
+
 ```
 
 ## Code demonstration
@@ -170,7 +172,7 @@ const App = () => {
   }
   return ( 
     <>   
-    <Rate modelValue="3" change={onChange} />
+    <Rate modelValue="3" onChange={onChange} />
     </>
   );
 };  
@@ -219,4 +221,16 @@ export default App;
 ## Event
 | field   | explain                                          | Callback Arguments  |
 |--------|----------------------------|----------|
-| change | Event triggered when the current score is modified | Current value   |
+| onChange `v1.3.3` | Event triggered when the current score is modified | Current value   |
+
+
+## Theming
+
+### CSS Variables
+
+The component provides the following CSS variables, which can be used to customize styles. Please refer to [ConfigProvider component](#/en-US/component/configprovider).
+
+| Name | Default Value |
+| --- | --- |
+| --nutui-rate-icon-color | ` $primary-color` |
+| --nutui-rate-icon-void-color | `  $disable-color` |

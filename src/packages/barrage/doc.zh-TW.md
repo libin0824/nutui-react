@@ -7,7 +7,9 @@
 ### 安裝
 
 ``` ts
+// react
 import { Barrage } from '@nutui/nutui-react';
+
 ```
 
 ## 代碼演示
@@ -65,7 +67,7 @@ export default App;
 | top  | 彈幕垂直距離    | Number | 10 |
 | loop  | 是否循環播放     | Boolean | true |
 
-### Events
+### Events API
 
 | 事件名 | 說明           | 回調參數     |
 |--------|----------------|--------------|

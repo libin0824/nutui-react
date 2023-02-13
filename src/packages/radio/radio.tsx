@@ -10,10 +10,12 @@ import Icon from '@/packages/icon'
 import RadioContext from './context'
 import RadioGroup from '@/packages/radiogroup'
 
+import { BasicComponent, ComponentDefaults } from '@/utils/typings'
+
 type Shape = 'button' | 'round'
 type Position = 'right' | 'left'
 
-export interface RadioProps {
+export interface RadioProps extends BasicComponent {
   className: string
   style: React.CSSProperties
   disabled: boolean
@@ -28,6 +30,7 @@ export interface RadioProps {
 }
 
 const defaultProps = {
+  ...ComponentDefaults,
   className: '',
   style: {},
   disabled: false,
@@ -43,7 +46,10 @@ const defaultProps = {
 export const Radio: FunctionComponent<
   Partial<RadioProps> & React.HTMLAttributes<HTMLDivElement>
 > & { RadioGroup: typeof RadioGroup } = (props) => {
-  const { children } = { ...defaultProps, ...props }
+  const { children } = {
+    ...defaultProps,
+    ...props,
+  }
   const {
     className,
     disabled,
@@ -55,6 +61,8 @@ export const Radio: FunctionComponent<
     iconActiveName,
     iconSize,
     onChange,
+    iconClassPrefix,
+    iconFontClassName,
     ...rest
   } = props
   const componentName = 'nut-radio'
@@ -104,6 +112,8 @@ export const Radio: FunctionComponent<
 
     return (
       <Icon
+        classPrefix={iconClassPrefix}
+        fontClassName={iconFontClassName}
         name={checkedStatement ? iconActiveName : iconName}
         size={iconSize}
         className={color()}
@@ -115,9 +125,19 @@ export const Radio: FunctionComponent<
       return renderButton()
     }
     if (reverseState) {
-      return [renderLabel(), renderIcon()]
+      return (
+        <>
+          {renderLabel()}
+          {renderIcon()}
+        </>
+      )
     }
-    return [renderIcon(), renderLabel()]
+    return (
+      <>
+        {renderIcon()}
+        {renderLabel()}
+      </>
+    )
   }
   const handleClick: MouseEventHandler<HTMLDivElement> = (e) => {
     if (disabledStatement || checkedStatement) return

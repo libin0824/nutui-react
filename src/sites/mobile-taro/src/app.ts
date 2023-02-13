@@ -1,21 +1,12 @@
 import { Component } from 'react'
+import '@/sites/assets/styles/reset.scss'
+import NutUI from '@/packages/nutui.react.taro.scss'
 import './app.scss'
 
-import '@/sites/assets/styles/reset.scss'
-import('@/packages/nutui.react.scss')
+console.log(NutUI)
 class App extends Component {
-  componentDidMount() {}
-
-  componentDidShow() {}
-
-  componentDidHide() {}
-
-  componentDidCatchError() {}
-
-  // this.props.children 是将要会渲染的页面
   render() {
     return this.props.children
   }
 }
-
 export default App

@@ -122,7 +122,7 @@ const CellDemo = () => {
         />
         <Cell
           title={translated.title3}
-          click={(
+          onClick={(
             event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>
           ) => testClick(event)}
         />
@@ -156,7 +156,6 @@ const CellDemo = () => {
             isLink
             url="https://jd.com"
           />
-          <Cell title={translated.routerJump} to="/" />
         </CellGroup>
         <CellGroup title={translated.customRight}>
           <Cell title="Switch" linkSlot={<Switch checked />} />

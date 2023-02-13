@@ -8,7 +8,9 @@ import React, {
 import bem from '@/utils/bem'
 import Icon from '@/packages/icon'
 
-export interface CollapseItemProps {
+import { BasicComponent, ComponentDefaults } from '@/utils/typings'
+
+export interface CollapseItemProps extends BasicComponent {
   title: string
   name: string
   isOpen: boolean
@@ -22,9 +24,12 @@ export interface CollapseItemProps {
   titleIconColor: string
   titleIconPosition: string
   titleIconSize: string
+  childnull: boolean
   onToggle: (isOpen: boolean, name: string) => void
 }
+
 const defaultProps = {
+  ...ComponentDefaults,
   title: '',
   name: '',
   isOpen: false,
@@ -38,6 +43,7 @@ const defaultProps = {
   titleIconColor: '',
   titleIconPosition: '',
   titleIconSize: '',
+  childnull: true,
 } as CollapseItemProps
 export const CollapseItem: FunctionComponent<
   Partial<CollapseItemProps> & React.HTMLAttributes<HTMLDivElement>
@@ -58,6 +64,9 @@ export const CollapseItem: FunctionComponent<
     titleIconSize,
     iconSize,
     iconColor,
+    childnull,
+    iconClassPrefix,
+    iconFontClassName,
     ...rest
   } = {
     ...defaultProps,
@@ -70,11 +79,6 @@ export const CollapseItem: FunctionComponent<
     transform: 'translateY(-50%)',
   })
   const colBem = bem('collapse-item')
-
-  useEffect(() => {
-    setCurrHeight('auto')
-    setUpdate(!update)
-  }, [children])
 
   const measuredRef = useCallback(
     (node: HTMLDivElement) => {
@@ -98,6 +102,16 @@ export const CollapseItem: FunctionComponent<
     }, 10)
   }, [isOpen, domHeight, rotate])
 
+  useEffect(() => {
+    if (!isOpen) {
+      setCurrHeight('0px')
+    } else {
+      setCurrHeight('auto')
+    }
+
+    setUpdate(!update)
+  }, [children, isOpen])
+
   return (
     <div className={colBem()} {...rest}>
       <div
@@ -111,6 +125,8 @@ export const CollapseItem: FunctionComponent<
           {titleIcon && titleIconPosition === 'left' && (
             <b className={colBem('title-icon-left')}>
               <Icon
+                classPrefix={iconClassPrefix}
+                fontClassName={iconFontClassName}
                 name={titleIcon}
                 size={titleIconSize}
                 color={disabled ? '#C2C2C2' : titleIconColor}
@@ -121,6 +137,8 @@ export const CollapseItem: FunctionComponent<
           {titleIcon && titleIconPosition === 'right' && (
             <b className={colBem('title-icon-right')}>
               <Icon
+                classPrefix={iconClassPrefix}
+                fontClassName={iconFontClassName}
                 name={titleIcon}
                 size={titleIconSize}
                 color={disabled ? '#C2C2C2' : titleIconColor}
@@ -132,6 +150,8 @@ export const CollapseItem: FunctionComponent<
         <div className={colBem('icon-box')}>
           <div className={colBem('icon')} style={iconStyle}>
             <Icon
+              classPrefix={iconClassPrefix}
+              fontClassName={iconFontClassName}
               name={icon}
               size={iconSize}
               color={disabled ? '#C2C2C2' : iconColor}
@@ -139,13 +159,15 @@ export const CollapseItem: FunctionComponent<
           </div>
         </div>
       </div>
-      <div
-        className={colBem('content')}
-        style={{ height: currHeight }}
-        ref={measuredRef}
-      >
-        <div className={colBem('content-text')}>{children}</div>
-      </div>
+      {childnull && (
+        <div
+          className={colBem('content')}
+          style={{ height: currHeight }}
+          ref={measuredRef}
+        >
+          <div className={colBem('content-text')}>{children}</div>
+        </div>
+      )}
     </div>
   )
 }

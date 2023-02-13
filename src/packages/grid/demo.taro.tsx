@@ -1,9 +1,8 @@
 import React from 'react'
-import Avatar from '../avatar/index.taro'
-import { Grid } from './grid.taro'
-import GridItem from '../griditem/index.taro'
-import { useTranslate } from '../../sites/assets/locale'
-import Toast from '../toast'
+import Taro from '@tarojs/taro'
+import { useTranslate } from '@/sites/assets/locale/taro'
+import { Avatar, Grid, GridItem } from '@/packages/nutui.react.taro'
+import Header from '@/sites/components/header'
 
 interface T {
   basic: string
@@ -15,6 +14,7 @@ interface T {
   horizontal: string
   iconStyle: string
   customContent: string
+  event: string
 }
 const GridDemo = () => {
   const [translated] = useTranslate<T>({
@@ -28,6 +28,7 @@ const GridDemo = () => {
       horizontal: '内容横向',
       iconStyle: '图标颜色/大小',
       customContent: '自定义内容',
+      event: '点击子项事件',
     },
     'zh-TW': {
       basic: '基本用法',
@@ -39,6 +40,7 @@ const GridDemo = () => {
       horizontal: '內容橫向',
       iconStyle: '圖標顏色/大小',
       customContent: '自定義內容',
+      event: '點擊子項事件',
     },
     'en-US': {
       basic: 'Basic Usage',
@@ -50,15 +52,23 @@ const GridDemo = () => {
       horizontal: 'Horizontal',
       iconStyle: 'Icon Style',
       customContent: 'Custom Content',
+      event: 'Grid Item Click',
     },
   })
 
   const handleClick = () => {
-    Toast.text('点击了第几个')
+    // Toast.text('点击了第几个')
+    Taro.showToast({ title: '点击了第几个' })
   }
+
+  const onClick = (item: any, index: number) => {
+    Taro.showToast({ title: `点击了${item.text}，第${index}个` })
+  }
+
   return (
     <>
-      <div className="demo">
+      <Header />
+      <div className={`demo ${Taro.getEnv() === 'WEB' ? 'web' : ''}`}>
         <h2>{translated.basic}</h2>
         <Grid>
           <GridItem icon="dongdong" text={translated.text} />
@@ -124,6 +134,7 @@ const GridDemo = () => {
             text={translated.text}
             iconColor="#478EF2"
             iconSize="40"
+            color="#478EF2"
           />
           <GridItem icon="dongdong" text={translated.text} />
         </Grid>
@@ -158,6 +169,14 @@ const GridDemo = () => {
               icon="https://img12.360buyimg.com/imagetools/jfs/t1/143702/31/16654/116794/5fc6f541Edebf8a57/4138097748889987.png"
             />
           </GridItem>
+        </Grid>
+
+        <h2>{translated.event}</h2>
+        <Grid direction="horizontal" onClick={onClick}>
+          <GridItem icon="dongdong" text={translated.text} />
+          <GridItem icon="dongdong" text={translated.text} />
+          <GridItem icon="dongdong" text={translated.text} />
+          <GridItem icon="dongdong" text={translated.text} />
         </Grid>
       </div>
     </>

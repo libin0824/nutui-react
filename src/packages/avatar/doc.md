@@ -6,7 +6,9 @@
 
 ### 安装
 ``` ts
+// react
 import { Avatar } from '@nutui/nutui-react';
+
 ```
 
 ## 代码示例
@@ -194,7 +196,7 @@ const App = () => {
   }
   return (
     <>
-      <Avatar icon="my" activeAvatar={activeAvatar} />
+      <Avatar icon="my" onActiveAvatar={activeAvatar} />
     </>
   )
 }
@@ -213,6 +215,7 @@ export default App;
 | url      | 设置图片类型头像的地址                           | String | -   |
 | alt      | 设置图片类型头像无法显示时的替代文本                | String | -   |
 | icon     | 设置 Icon 类型头像图标, 类似 Icon 组件的 name 属性  | String | -     |
+| iconSize`v1.3.11`     | [图标尺寸](#/icon) | String、Number | `16`|
 
 ### avatarGroup
 | 字段     | 说明                                                             | 类型   | 默认值 |
@@ -229,5 +232,22 @@ export default App;
 
 | 字段             | 说明         | 类型     | 回调参数 |
 | ---------------- | ------------ | -------- | -------- |
-| activeAvatar | 点击头像触发事件    | Function | event    |
+| activeAvatar `v1.3.8废弃` | 点击头像触发事件    | Function | event    |
+| onActiveAvatar `v1.3.8` | 点击头像触发事件    | Function | event    |
 | onError       | 图片加载失败的事件   | Function | event    |
+
+## 主题定制
+
+### 样式变量
+
+组件提供了下列 CSS 变量，可用于自定义样式，使用方法请参考 [ConfigProvider 组件](#/zh-CN/component/configprovider)。
+
+| 名称 | 默认值 |
+| --- | --- |
+| --nutui-avatar-square | ` 5px` |
+| --nutui-avatar-large-width | ` 60px` |
+| --nutui-avatar-large-height | ` 60px` |
+| --nutui-avatar-small-width | ` 32px` |
+| --nutui-avatar-small-height | ` 32px` |
+| --nutui-avatar-normal-width | ` 40px` |
+| --nutui-avatar-normal-height | ` 40px` |

@@ -5,14 +5,17 @@ import React, {
   useState,
   useCallback,
   useRef,
-  useLayoutEffect,
   MouseEvent,
   HTMLInputTypeAttribute,
+  forwardRef,
+  useImperativeHandle,
 } from 'react'
 
 import { formatNumber } from './util'
 import Icon from '@/packages/icon'
 import { useConfig } from '@/packages/configprovider'
+
+import { BasicComponent, ComponentDefaults } from '@/utils/typings'
 
 export type InputAlignType = 'left' | 'center' | 'right' // text-align
 export type InputFormatTrigger = 'onChange' | 'onBlur' // onChange: 在输入时执行格式化 ; onBlur: 在失焦时执行格式化
@@ -26,8 +29,9 @@ export type InputRule = {
 
 export type ConfirmTextType = 'send' | 'search' | 'next' | 'go' | 'done'
 
-export interface InputProps {
+export interface InputProps extends BasicComponent {
   type: InputType
+  name: string
   defaultValue: any
   placeholder: string
   label: string
@@ -62,18 +66,21 @@ export interface InputProps {
   slotButton?: React.ReactNode
   slotInput?: React.ReactNode
   formatter: (value: string) => void
-  change?: (value: any, event: Event) => void
-  blur?: (value: any, event: Event) => void
-  focus?: (value: any, event: Event) => void
-  clear?: (value: any, event: Event) => void
+  onChange?: (value: any, event: Event) => void
+  onBlur?: (value: any, event: Event) => void
+  onFocus?: (value: any, event: Event) => void
+  onClear?: (value: any, event: Event) => void
   keypress?: (value: any, event: Event) => void
-  clickInput?: (value: any) => void
-  clickLeftIcon?: (value: any) => void
-  clickRightIcon?: (value: any) => void
-  click?: (value: any) => void
+  onClickInput?: (value: any) => void
+  onClickLeftIcon?: (value: any) => void
+  onClickRightIcon?: (value: any) => void
+  onClick?: (value: any) => void
 }
+
 const defaultProps = {
+  ...ComponentDefaults,
   type: 'text',
+  name: '',
   defaultValue: '',
   placeholder: '',
   label: '',
@@ -108,12 +115,17 @@ const defaultProps = {
 } as unknown as InputProps
 
 export const Input: FunctionComponent<
-  Partial<InputProps> & React.HTMLAttributes<HTMLDivElement>
-> = (props) => {
+  Partial<InputProps> &
+    Omit<
+      React.HTMLAttributes<HTMLDivElement>,
+      'onChange' | 'onBlur' | 'onFocus' | 'onClick'
+    >
+> = forwardRef((props, ref) => {
   const { locale } = useConfig()
   const {
     children,
     type,
+    name,
     defaultValue,
     placeholder,
     label,
@@ -147,18 +159,23 @@ export const Input: FunctionComponent<
     rows,
     slotButton,
     slotInput,
-    change,
-    blur,
-    focus,
-    clear,
+    onChange,
+    onBlur,
+    onFocus,
+    onClear,
     formatter,
     keypress,
-    clickInput,
-    clickLeftIcon,
-    clickRightIcon,
-    click,
+    onClickInput,
+    onClickLeftIcon,
+    onClickRightIcon,
+    onClick,
+    iconClassPrefix,
+    iconFontClassName,
     ...rest
-  } = { ...defaultProps, ...props }
+  } = {
+    ...defaultProps,
+    ...props,
+  }
 
   locale.placeholder = placeholder || locale.placeholder
 
@@ -172,14 +189,10 @@ export const Input: FunctionComponent<
     validateFailed: false, // 校验失败
     validateMessage: '', // 校验信息
   }
-  useLayoutEffect(() => {
-    updateValue(getModelValue(), formatTrigger)
-  })
+
   useEffect(() => {
     setClasses(inputClass)
-    if (defaultValue) {
-      SetInputValue(defaultValue)
-    }
+    SetInputValue(defaultValue)
   }, [defaultValue])
 
   useEffect(() => {
@@ -189,6 +202,9 @@ export const Input: FunctionComponent<
     }
   }, [inputValue])
 
+  useImperativeHandle(ref, () => {
+    return inputRef.current
+  })
   const inputClass = useCallback(() => {
     const prefixCls = 'nut-input'
     return [
@@ -198,14 +214,21 @@ export const Input: FunctionComponent<
       `${required ? `${prefixCls}-required` : ''}`,
       `${error ? `${prefixCls}-error` : ''}`,
       `${border ? `${prefixCls}-border` : ''}`,
+      `${slotButton || rightIcon ? `${prefixCls}-right-mark` : ''}`,
     ]
       .filter(Boolean)
       .join(' ')
-  }, [disabled, required, error, border])
+  }, [disabled, required, error, border, slotButton, rightIcon, center])
+
+  // 样式状态重置
+  useEffect(() => {
+    setClasses(inputClass)
+  }, [disabled, required, error, border, slotButton, rightIcon, center])
 
   const updateValue = (
     value: any,
-    trigger: InputFormatTrigger = 'onChange'
+    trigger: InputFormatTrigger = 'onChange',
+    event?: any
   ) => {
     let val = value
 
@@ -232,28 +255,26 @@ export const Input: FunctionComponent<
     if (inputRef?.current?.value !== val) {
       inputRef.current.value = val
     }
-    // if (val !== defaultValue) {
     SetInputValue(val)
-    // }
   }
 
-  const onFocus = (event: Event) => {
+  const handleFocus = (event: Event) => {
     const val: any = (event.target as any).value
     SetActive(true)
-    focus && focus(val, event)
+    onFocus && onFocus(val, event)
   }
 
-  const onInput = (event: Event) => {
+  const handleInput = (event: Event) => {
     let val: any = (event.target as any).value
 
     if (maxlength && val.length > Number(maxlength)) {
       val = val.slice(0, Number(maxlength))
     }
-    updateValue(val)
-    change && change(val, event)
+    updateValue(val, 'onChange')
+    onChange && onChange(val, event)
   }
 
-  const onBlur = (event: Event) => {
+  const handleBlur = (event: Event) => {
     setTimeout(() => {
       SetActive(false)
     }, 200)
@@ -262,18 +283,18 @@ export const Input: FunctionComponent<
       val = val.slice(0, Number(maxlength))
     }
     updateValue(getModelValue(), 'onBlur')
-    blur && blur(val, event)
+    onBlur && onBlur(val, event)
   }
 
-  const onClickInput = (event: MouseEvent) => {
-    clickInput && clickInput(event)
+  const handleClickInput = (event: MouseEvent) => {
+    onClickInput && onClickInput(event)
   }
-  const onClickLeftIcon = (event: MouseEvent) => {
-    clickLeftIcon && clickLeftIcon(event)
+  const handleClickLeftIcon = (event: MouseEvent) => {
+    onClickLeftIcon && onClickLeftIcon(event)
   }
 
-  const onClickRightIcon = (event: MouseEvent) => {
-    clickRightIcon && clickRightIcon(event)
+  const handleClickRightIcon = (event: MouseEvent) => {
+    onClickRightIcon && onClickRightIcon(event)
   }
 
   const resetValidation = () => {
@@ -295,7 +316,7 @@ export const Input: FunctionComponent<
 
   const handleClear = (event: Event) => {
     updateValue('')
-    clear && clear('', event)
+    onClear && onClear('', event)
   }
 
   return (
@@ -304,25 +325,27 @@ export const Input: FunctionComponent<
       style={style}
       {...rest}
       onClick={(e) => {
-        click && click(e)
+        onClick && onClick(e)
       }}
     >
       {slotInput ? (
         <>
-          <div
-            className={`nut-input-label ${labelClass}`}
-            style={{ width: `${labelWidth}px`, textAlign: labelAlign }}
-          >
-            <div className="label-string">
-              {label}
-              {colon ? ':' : ''}
+          {label ? (
+            <div
+              className={`nut-input-label ${labelClass}`}
+              style={{ width: `${labelWidth}px`, textAlign: labelAlign }}
+            >
+              <div className="label-string">
+                {label}
+                {colon ? ':' : ''}
+              </div>
             </div>
-          </div>
+          ) : null}
           <div className="nut-input-value">
             <div
               className="nut-input-inner"
               onClick={(e) => {
-                onClickInput(e)
+                handleClickInput(e)
               }}
             >
               {slotInput}
@@ -335,107 +358,126 @@ export const Input: FunctionComponent<
             <div
               className="nut-input-left-icon"
               onClick={(e) => {
-                onClickLeftIcon(e)
+                handleClickLeftIcon(e)
               }}
             >
-              <Icon name={leftIcon} size={leftIconSize} />
+              <Icon
+                classPrefix={iconClassPrefix}
+                fontClassName={iconFontClassName}
+                name={leftIcon}
+                size={leftIconSize}
+              />
             </div>
           ) : null}
-          <div
-            className={`nut-input-label ${labelClass}`}
-            style={{ width: `${labelWidth}px`, textAlign: labelAlign }}
-          >
-            <div className="label-string">
-              {label}
-              {colon ? ':' : ''}
-            </div>
-          </div>
-          <div className="nut-input-value">
+          {label ? (
             <div
-              className="nut-input-inner"
-              onClick={(e) => {
-                onClickInput(e)
-              }}
+              className={`nut-input-label ${labelClass}`}
+              style={{ width: `${labelWidth}px`, textAlign: labelAlign }}
             >
-              {type === 'textarea' ? (
-                <textarea
-                  className="input-text"
-                  ref={inputRef}
-                  style={{
-                    textAlign: inputAlign,
-                    height: `${Number(rows) * 24}px`,
-                  }}
-                  maxLength={maxlength}
-                  placeholder={placeholder || locale.placeholder}
-                  disabled={disabled}
-                  readOnly={readonly}
-                  value={inputValue}
-                  autoFocus={autofocus}
-                  onBlur={(e: any) => {
-                    onBlur(e)
-                  }}
-                  onFocus={(e: any) => {
-                    onFocus(e)
-                  }}
-                  onInput={(e: any) => {
-                    onInput(e)
-                  }}
-                />
-              ) : (
-                <input
-                  className="input-text"
-                  ref={inputRef}
-                  style={{ textAlign: inputAlign }}
-                  type={inputType(type)}
-                  maxLength={maxlength}
-                  placeholder={placeholder || locale.placeholder}
-                  disabled={disabled}
-                  readOnly={readonly}
-                  value={inputValue}
-                  autoFocus={autofocus}
-                  onBlur={(e: any) => {
-                    onBlur(e)
-                  }}
-                  onFocus={(e: any) => {
-                    onFocus(e)
-                  }}
-                  onInput={(e: any) => {
-                    onInput(e)
-                  }}
-                />
-              )}
-              {clearable && !readonly && active && inputValue.length > 0 ? (
-                <Icon
-                  className="nut-input-clear"
-                  name={clearIcon}
-                  size={clearSize}
-                  onClick={(e) => {
-                    handleClear(e)
-                  }}
-                />
-              ) : null}
+              <div className="label-string">
+                {label}
+                {colon ? ':' : ''}
+              </div>
+            </div>
+          ) : null}
+          <div className="nut-input-value">
+            <div className="nut-input-main-con">
+              <div
+                className="nut-input-inner"
+                onClick={(e) => {
+                  handleClickInput(e)
+                }}
+              >
+                {type === 'textarea' ? (
+                  <textarea
+                    name={name}
+                    className="input-text"
+                    ref={inputRef}
+                    style={{
+                      textAlign: inputAlign,
+                      height: `${Number(rows) * 24}px`,
+                    }}
+                    maxLength={maxlength}
+                    placeholder={placeholder || locale.placeholder}
+                    disabled={disabled}
+                    readOnly={readonly}
+                    value={inputValue}
+                    autoFocus={autofocus}
+                    onBlur={(e: any) => {
+                      handleBlur(e)
+                    }}
+                    onFocus={(e: any) => {
+                      handleFocus(e)
+                    }}
+                    onInput={(e: any) => {
+                      handleInput(e)
+                    }}
+                  />
+                ) : (
+                  <input
+                    name={name}
+                    className="input-text"
+                    ref={inputRef}
+                    style={{ textAlign: inputAlign }}
+                    type={inputType(type)}
+                    maxLength={maxlength}
+                    placeholder={placeholder || locale.placeholder}
+                    disabled={disabled}
+                    readOnly={readonly}
+                    value={inputValue}
+                    autoFocus={autofocus}
+                    onBlur={(e: any) => {
+                      handleBlur(e)
+                    }}
+                    onFocus={(e: any) => {
+                      handleFocus(e)
+                    }}
+                    onInput={(e: any) => {
+                      handleInput(e)
+                    }}
+                  />
+                )}
+                {clearable && !readonly && active && inputValue.length > 0 ? (
+                  <Icon
+                    classPrefix={iconClassPrefix}
+                    fontClassName={iconFontClassName}
+                    className="nut-input-clear"
+                    name={clearIcon}
+                    size={clearSize}
+                    onClick={(e) => {
+                      handleClear(e)
+                    }}
+                  />
+                ) : null}
+              </div>
+
               {rightIcon && rightIcon.length > 0 ? (
                 <div
                   className="nut-input-right-icon"
                   onClick={(e) => {
-                    onClickRightIcon(e)
+                    handleClickRightIcon(e)
                   }}
                 >
-                  <Icon name={rightIcon} size={rightIconSize} />
+                  <Icon
+                    classPrefix={iconClassPrefix}
+                    fontClassName={iconFontClassName}
+                    name={rightIcon}
+                    size={rightIconSize}
+                  />
                 </div>
               ) : null}
               {slotButton ? (
                 <div className="nut-input-button">{slotButton}</div>
               ) : null}
+              {showWordLimit && maxlength ? (
+                <div className="nut-input-word-limit">
+                  <span className="nut-input-word-num">
+                    {inputValue ? inputValue.length : 0}
+                  </span>
+                  /{maxlength}
+                </div>
+              ) : null}
             </div>
-            {showWordLimit && maxlength ? (
-              <div className="nut-input-word-limit">
-                <span className="nut-input-word-num">
-                  {inputValue ? inputValue.length : 0}
-                </span>
-                /{maxlength}
-              </div>
-            ) : null}
             {errorMessage ? (
               <div
                 className="nut-input-error-message"
@@ -451,7 +493,7 @@ export const Input: FunctionComponent<
       )}
     </div>
   )
-}
+})
 
 Input.defaultProps = defaultProps
 Input.displayName = 'NutInput'

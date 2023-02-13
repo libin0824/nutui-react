@@ -4,18 +4,12 @@ import React, {
   forwardRef,
 } from 'react'
 import classNames from 'classnames'
-import Button from '@/packages/button'
+import Button from '@/packages/button/index.taro'
 import { DialogWrapper } from './DialogWrapper'
-import confirm from './Confirm'
-import {
-  IDialogProps,
-  DialogReturnProps,
-  DialogComponent,
-  ConfirmProps,
-} from './config'
-import { useConfig } from '@/packages/configprovider'
+import { BasicDialogProps, DialogComponent } from './config'
+import { useConfig } from '@/packages/configprovider/configprovider.taro'
 
-export type DialogProps = IDialogProps
+export type DialogProps = BasicDialogProps
 const defaultProps = {
   okText: '',
   cancelText: '',
@@ -120,19 +114,6 @@ const BaseDialog: ForwardRefRenderFunction<
 }
 
 export const Dialog: DialogComponent = forwardRef(BaseDialog) as DialogComponent
-
-Dialog.confirm = (props: ConfirmProps): DialogReturnProps => {
-  return confirm(props)
-}
-;['alert'].forEach((type) => {
-  ;(Dialog as any)[type] = (props: ConfirmProps) => {
-    return confirm({
-      ...props,
-      isNotice: false,
-      noticeType: type,
-    })
-  }
-})
 
 Dialog.defaultProps = defaultProps
 Dialog.displayName = 'NutDialog'

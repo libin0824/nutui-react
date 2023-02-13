@@ -6,7 +6,7 @@
 
 ### 安装
 ```javascript
-import { Virtuallist } from '@nutui/nutui-react';
+import { VirtualList } from '@nutui/nutui-react';
 ```
 ## 代码演示
 
@@ -60,7 +60,7 @@ import { VirtualList } from '@nutui/nutui-react';
 
 const App =() => {
   const [sourceData, setsourceData] = useState([])
-
+  const [pageNo, setPageNo] = useState(1)
   const getData = useCallback(() => {
     const datas = []
     const pageSize = 90
@@ -71,7 +71,7 @@ const App =() => {
       return [...sourceData, ...datas]
     })
   }, [])
- const handleScroll = () => {
+ const onScroll = () => {
     if (pageNo > 100) return
     setPageNo(pageNo + 1)
   }
@@ -92,7 +92,7 @@ const App =() => {
             ItemRender={ItemVariableDemo}
             itemSize={128}
             itemEqualSize={false}
-            handleScroll={handleScroll}
+            onScroll={onScroll}
           />
   </div>
   )
@@ -110,7 +110,7 @@ import { VirtualList } from '@nutui/nutui-react';
 
 const App =() => {
   const [sourceData, setsourceData] = useState([])
-
+  const [pageNo, setPageNo] = useState(1)
   const getData = useCallback(() => {
     const datas = []
     const pageSize = 90
@@ -151,7 +151,7 @@ import { VirtualList } from '@nutui/nutui-react';
 
 const App =() => {
   const [sourceData, setsourceData] = useState([])
-
+  const [pageNo, setPageNo] = useState(1)
   const getData = useCallback(() => {
     const datas = []
     const pageSize = 90
@@ -162,7 +162,7 @@ const App =() => {
       return [...sourceData, ...datas]
     })
   }, [])
- const handleScroll = () => {
+ const onScroll = () => {
     if (pageNo > 100) return
     setPageNo(pageNo + 1)
   }
@@ -184,7 +184,7 @@ const App =() => {
             ItemRender={ItemVariableDemo}
             horizontal
             itemEqualSize={false}
-            handleScroll={handleScroll}
+            onScroll={onScroll}
           />
   </div>
   )
@@ -199,7 +199,7 @@ export default App;
 | 参数           | 说明                               | 类型       | 默认值                                   |
 |---------------|----------------------------------|----------|---------------------------------------|
 | sourceData    | 获取数据                             | Array    | -                                     |
-| containerSize | 容器高度                             | Number   | 获取元素的offsetWidth或offsetHeight，需要css给出 |
+| containerSize | 容器高度                             | Number   | 获取元素的 offsetWidth 或 offsetHeight，需要 css 给出 |
 | ItemRender    | virtual 列表父节点渲染的函数               | React.FC | -                                     |
 | itemSize      | item高度，如果不定高，则为首屏单个最大size        | String   | -                                     |
 | itemEqualSize | item大小是否一致                       | Boolean  | true                                  |
@@ -207,9 +207,10 @@ export default App;
 | key           | 唯一值 ,Item(sourceData)具体的某个唯一值的字段 | string   | index                                 |
 | horizontal    | 决定列表是横向的还是纵向的                    | Boolean  | false                                 |
 ## Events
-| 方法名          | 说明                  | 参数            | 返回值     |
-| -------------- |---------------------| --------------- | ---------- |
-| handleScroll   | 滑动到底(右)的事件，可以实现无限滚动 |        -        |      -    |
+| 方法名              | 说明                  | 参数            | 返回值     |
+|------------------|---------------------| --------------- | ---------- |
+| handleScroll`废弃` | 滑动到底(右)的事件，可以实现无限滚动 |        -        |      -    |
+| onScroll`v1.3.8`  | 滑动到底(右)的事件，可以实现无限滚动 |        -        |      -    |
 
 
 

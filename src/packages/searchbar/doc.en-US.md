@@ -7,6 +7,7 @@ The input box component used to search the scene.
 ### Install
 
 ```javascript
+// react
 import { SearchBar } from '@nutui/nutui-react';
 
 ```
@@ -176,9 +177,32 @@ export default App;
 |onFocus | triggered when focusing | _val: string, event: Event_ |
 |onBlur | triggered when out of focus | _val: string, event: Event_ |
 |onClear | triggered when clicking clear | _event: Event_ |
+|onCancel `v1.3.6`| Fired when the cancel button is clicked | - |
 |onSearch | trigger when confirming search | _val: string, event: Event_ |
 |onClickInput | triggered when clicking the input area | _event: Event_ |
 |onClickLeftinIcon | triggered when clicking the icon on the left side of the input box | _val: string, event: Event_ |
 |onClickLeftoutIcon | triggered when clicking the icon on the left outside of the input box | _val: string, event: Event_ |
 |onClickRightinIcon | triggered when clicking the icon on the right side of the input box | _val: string, event: Event_ |
 |onClickRightoutIcon | triggered when clicking the icon on the right side of the input box | _val: string, event: Event_ |
+
+
+## Theming
+
+### CSS Variables
+
+The component provides the following CSS variables, which can be used to customize styles. Please refer to [ConfigProvider component](#/en-US/component/configprovider).
+
+| Name | Default Value |
+| --- | --- |
+| --nutui-searchbar-background | ` $gray6` |
+| --nutui-searchbar-right-out-color | `  $black` |
+| --nutui-searchbar-padding | ` 9px 16px` |
+| --nutui-searchbar-action-text-color | `  $gray1` |
+| --nutui-searchbar-input-height | ` 32px` |
+| --nutui-searchbar-input-padding | ` 0 28px` |
+| --nutui-searchbar-input-background | `  #f7f7f7` |
+| --nutui-searchbar-input-text-color | `  $gray1` |
+| --nutui-searchbar-input-border-radius | `  16px` |
+| --nutui-searchbar-input-box-shadow | `  0 0 8px 0 rgba(0, 0, 0, 0.04)` |
+| --nutui-searchbar-input-bar-color | `  inherit` |
+| --nutui-searchbar-input-bar-placeholder-color | `  inherit` |

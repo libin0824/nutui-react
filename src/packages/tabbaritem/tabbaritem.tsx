@@ -1,17 +1,17 @@
 import React, { FunctionComponent, useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
 
 import bem from '@/utils/bem'
 import Icon from '@/packages/icon'
 
-export interface TabbarItemProps {
+import { BasicComponent, ComponentDefaults } from '@/utils/typings'
+
+export interface TabbarItemProps extends BasicComponent {
   dot: boolean
   size: string | number
-  classPrefix: string
+  className: string
   tabTitle: string
   icon: string
   href: string
-  to: any
   num: string | number
   active: boolean
   activeColor: string
@@ -19,14 +19,15 @@ export interface TabbarItemProps {
   index: number
   handleClick: (idx: number) => void
 }
+
 const defaultProps = {
+  ...ComponentDefaults,
   dot: false,
   size: '',
-  classPrefix: 'nut-icon',
+  className: '',
   tabTitle: '',
   icon: '',
   href: '',
-  to: '',
   num: '',
   active: false,
   activeColor: '',
@@ -41,39 +42,37 @@ export const TabbarItem: FunctionComponent<Partial<TabbarItemProps>> = (
   const {
     dot,
     size,
-    classPrefix,
+    className,
+    style,
     tabTitle,
     icon,
     href,
-    to,
     num,
     active,
     activeColor,
     unactiveColor,
     index,
     handleClick,
+    iconClassPrefix,
+    iconFontClassName,
   } = {
     ...defaultProps,
     ...props,
   }
   const b = bem('tabbar-item')
   const bIcon = bem('tabbar-item__icon-box')
-  const history = useHistory()
 
   useEffect(() => {
     if (active && href) {
       window.location.href = href
-      return
     }
-    if (active && to) {
-      history.push(to)
-    }
-  }, [active, history, href, to])
+  }, [active, href])
 
   return (
     <div
-      className={`${b({ active })}`}
+      className={`${b({ active })} ${className}`}
       style={{
+        ...style,
         color: active ? activeColor : unactiveColor,
       }}
       onClick={() => {
@@ -96,7 +95,12 @@ export const TabbarItem: FunctionComponent<Partial<TabbarItemProps>> = (
 
         {icon && (
           <div>
-            <Icon size={size} name={icon} classPrefix={classPrefix} />
+            <Icon
+              classPrefix={iconClassPrefix}
+              fontClassName={iconFontClassName}
+              size={size}
+              name={icon}
+            />
           </div>
         )}
         <div

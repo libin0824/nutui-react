@@ -19,7 +19,9 @@ import {
   AddressList,
 } from './type'
 
-export interface AddressProps {
+import { BasicComponent, ComponentDefaults } from '@/utils/typings'
+
+export interface AddressProps extends BasicComponent {
   className?: string
   style?: CSSProperties
   modelValue: boolean
@@ -52,18 +54,19 @@ export interface AddressProps {
 }
 
 const defaultProps = {
+  ...ComponentDefaults,
   modelValue: false,
   modelSelect: [],
   type: 'custom',
-  customAddressTitle: '请选择所在地区',
+  customAddressTitle: '',
   province: [],
   city: [],
   country: [],
   town: [],
   isShowCustomAddress: true,
   existAddress: [],
-  existAddressTitle: '配送至',
-  customAndExistTitle: '选择其他地址',
+  existAddressTitle: '',
+  customAndExistTitle: '',
   height: '200px',
   defaultIcon: 'location2',
   selectedIcon: 'Check',
@@ -102,8 +105,13 @@ export const Address: FunctionComponent<
     onTabChecked,
     style,
     className,
+    iconClassPrefix,
+    iconFontClassName,
     ...rest
-  } = { ...defaultProps, ...props }
+  } = {
+    ...defaultProps,
+    ...props,
+  }
   const b = bem('address')
 
   const [privateType, setPrivateType] = useState<string>(type)
@@ -214,19 +222,30 @@ export const Address: FunctionComponent<
       <div className={b('header')}>
         <div className="arrow-back" onClick={onSwitchModule}>
           {privateType === 'custom' && backBtnIcon && (
-            <Icon name={backBtnIcon} color="#cccccc" />
+            <Icon
+              classPrefix={iconClassPrefix}
+              fontClassName={iconFontClassName}
+              name={backBtnIcon}
+              color="#cccccc"
+            />
           )}
         </div>
 
         <div className={b('header__title')}>
           {privateType === 'custom'
-            ? locale.address.selectRegion || customAddressTitle
-            : locale.address.deliveryTo || existAddressTitle}
+            ? customAddressTitle || locale.address.selectRegion
+            : existAddressTitle || locale.address.deliveryTo}
         </div>
 
         <div onClick={() => handClose()}>
           {closeBtnIcon && (
-            <Icon name={closeBtnIcon} color="#cccccc" size="18px" />
+            <Icon
+              classPrefix={iconClassPrefix}
+              fontClassName={iconFontClassName}
+              name={closeBtnIcon}
+              color="#cccccc"
+              size="18px"
+            />
           )}
         </div>
       </div>
@@ -286,7 +305,7 @@ export const Address: FunctionComponent<
                 defaultIcon={defaultIcon}
                 isShowCustomAddress={isShowCustomAddress}
                 customAndExistTitle={
-                  locale.address.chooseAnotherAddress || customAndExistTitle
+                  customAndExistTitle || locale.address.chooseAnotherAddress
                 }
                 onSelected={selectedExist}
                 onSwitchModule={onSwitchModule}

@@ -7,6 +7,8 @@ import {
   Button,
   Toast,
 } from '@/packages/nutui.react.taro'
+import Header from '@/sites/components/header'
+import Taro from '@tarojs/taro'
 
 interface T {
   basic: string
@@ -69,10 +71,16 @@ const ProgressDemo = () => {
   })
 
   const [value, setValue] = useState(0)
-
+  const [show, SetShow] = useState(false)
+  const [toastMsg, SetToastMsg] = useState('')
+  const toastShow = (msg: any) => {
+    SetToastMsg(msg)
+    SetShow(true)
+  }
   return (
     <>
-      <div className="demo">
+      <Header />
+      <div className={`demo ${Taro.getEnv() === 'WEB' ? 'web' : ''}`}>
         <h2>{translated.basic}</h2>
         <Cell style={cellStyles}>
           <Progress percentage={30} />
@@ -150,7 +158,8 @@ const ProgressDemo = () => {
             onClick={() => {
               let num = value
               if (value <= 0) {
-                Toast.text('进度已为0')
+                // Toast.text('进度已为0')
+                toastShow('进度已为0')
                 return false
               }
               num -= 10
@@ -166,7 +175,8 @@ const ProgressDemo = () => {
             onClick={() => {
               let num = value
               if (value >= 100) {
-                Toast.text('进度已为100%')
+                // Toast.text('进度已为100%')
+                toastShow('进度已为100%')
                 return false
               }
               num += 10
@@ -176,6 +186,14 @@ const ProgressDemo = () => {
             {translated.add}
           </Button>
         </Cell>
+        <Toast
+          type="text"
+          visible={show}
+          msg={toastMsg}
+          onClose={() => {
+            SetShow(false)
+          }}
+        />
       </div>
     </>
   )

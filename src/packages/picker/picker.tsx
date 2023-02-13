@@ -75,7 +75,7 @@ const InternalPicker: ForwardRefRenderFunction<unknown, Partial<PickerProps>> =
     const [columnsList, setColumnsList] = useState<PickerOption[][]>([]) // 格式化后每一列的数据
     const b = bem('picker')
 
-    let isConfirmEvent = useRef(false)
+    const isConfirmEvent = useRef(false)
 
     // 默认值修改
     useEffect(() => {
@@ -92,7 +92,6 @@ const InternalPicker: ForwardRefRenderFunction<unknown, Partial<PickerProps>> =
 
     // 选中值进行修改
     useEffect(() => {
-      console.log('修改')
       onChange && onChange(columnIndex, chooseValueData, selectedOptions())
       if (isConfirmEvent.current) {
         isConfirmEvent.current = false

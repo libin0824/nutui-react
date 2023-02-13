@@ -7,7 +7,9 @@
 ### 安裝
 
 ```javascript
+// react
 import { Audio } from '@nutui/nutui-react'
+
 ```
 
 ## 代碼演示
@@ -45,10 +47,12 @@ export default App;
 :::demo
 
 ```tsx
-import  React from "react";
-import { Audio , Icon} from '@nutui/nutui-react';
+import  React,{useState} from "react";
+import { Audio,Icon } from '@nutui/nutui-react';
 
 const App = () => {
+  const [duration, setDuration] = useState(0)
+  const [voiceIcon, setVoiceIcon] = useState('play-circle-fill')
   return (
     <>
      <Audio

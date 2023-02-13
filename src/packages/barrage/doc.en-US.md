@@ -7,7 +7,9 @@ It is used for the rotation display of words and phrases, which is suitable for 
 ### Install
 
 ``` ts
+// react
 import { Barrage } from '@nutui/nutui-react';
+
 ```
 
 ## Code demonstration
@@ -65,7 +67,7 @@ export default App;
 | top  | Vertical distance of barrage    | Number | 10 |
 | loop  | Loop play     | Boolean | true |
 
-### Events
+### Events API
 
 | Event | Description           | Arguments     |
 |--------|----------------|--------------|

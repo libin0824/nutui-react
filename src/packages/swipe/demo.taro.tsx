@@ -1,11 +1,15 @@
-import React, { useRef } from 'react'
-import { SwipeInstance, Swipe } from './swipe.taro'
-import { useTranslate } from '../../sites/assets/locale'
-import Cell from '@/packages/cell/index.taro'
-import Button from '@/packages/button/index.taro'
-import Toast from '@/packages/toast/index.taro'
-import Dialog from '@/packages/dialog/index.taro'
-import InputNumber from '@/packages/inputnumber/index.taro'
+import React, { useRef, useState } from 'react'
+import { useTranslate } from '@/sites/assets/locale/taro'
+import {
+  Button,
+  Cell,
+  Toast,
+  Dialog,
+  InputNumber,
+  Swipe,
+} from '@/packages/nutui.react.taro'
+import Header from '@/sites/components/header'
+import Taro from '@tarojs/taro'
 
 type TSwipeDemo = {
   title1: string
@@ -121,10 +125,17 @@ const SwipeDemo = () => {
       deleteTips: 'Apakah Anda yakin untuk menghapus?',
     },
   })
+  const [show, SetShow] = useState(false)
+  const [toastMsg, SetToastMsg] = useState('')
+  const toastShow = (msg: any) => {
+    SetToastMsg(msg)
+    SetShow(true)
+  }
 
-  const refDom = useRef<SwipeInstance>(null)
+  const refDom = useRef<any>(null)
   const handleChange = () => {
-    Toast.text(translated.click)
+    // Toast.text(translated.click)
+    toastShow(translated.click)
   }
   const beforeClose = (postion: string) => {
     Dialog.alert({
@@ -138,12 +149,14 @@ const SwipeDemo = () => {
   }
 
   const handleClose = () => {
-    Toast.text('close')
+    // Toast.text('close')
+    toastShow('close')
   }
 
   return (
     <>
-      <div className="demo">
+      <Header />
+      <div className={`demo ${Taro.getEnv() === 'WEB' ? 'web' : ''}`}>
         <h2>{translated.title1}</h2>
         <Swipe
           rightAction={
@@ -184,8 +197,8 @@ const SwipeDemo = () => {
           }
           onActionClick={handleChange}
           onOpen={({ name, position }) => {
-            console.log(name, position)
-            Toast.text(translated.open)
+            // Toast.text(translated.open)
+            toastShow(translated.open)
           }}
           onClose={handleClose}
         >
@@ -233,6 +246,14 @@ const SwipeDemo = () => {
             </div>
           </Cell>
         </Swipe>
+        <Toast
+          type="text"
+          visible={show}
+          msg={toastMsg}
+          onClose={() => {
+            SetShow(false)
+          }}
+        />
       </div>
     </>
   )
